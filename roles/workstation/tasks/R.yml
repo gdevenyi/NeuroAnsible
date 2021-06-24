@@ -1,0 +1,11 @@
+- name: install r and packages
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: latest
+    cache_valid_time: 3600
+  vars:
+    packages: "{{ lookup('file', 'files/r-short-list').splitlines() }}"
+
+- name: install rstudio
+  apt: deb=https://download1.rstudio.org/desktop/bionic/amd64/rstudio-1.4.1717-amd64.deb

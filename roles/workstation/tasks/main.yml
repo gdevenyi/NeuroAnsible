@@ -1,0 +1,27 @@
+- include: repos.yml
+- include: packages.yml
+- include: file-config.yml
+
+- name: Create /opt/quarantine
+  file:
+    path: /opt/quarantine
+    state: directory
+
+- name: Set default locale to en_CA.UTF-8
+  debconf:
+    name: locales
+    question: locales/default_environment_locale
+    value: en_CA.UTF-8
+    vtype: select
+
+- {include: R.yml, tags: R}
+- {include: python.yml, tags: python}
+- {include: fsl.yml, tags: fsl}
+- {include: afni.yml, tags: afni}
+- {include: minc.yml, tags: minc}
+- {include: freesurfer.yml, tags: freesurfer}
+- {include: ants.yml, tags: ants}
+- {include: science-packages.yml, tags: extras}
+- {include: cobralab.yml, tags: cobralab}
+- {include: containers.yml, tags: containers}
+- {include: resources.yml, tags: resources}

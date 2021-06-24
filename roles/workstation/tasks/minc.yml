@@ -1,0 +1,149 @@
+- name: Install minc-toolkit-v2 build deps
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: latest
+    autoclean: yes
+    autoremove: yes
+  vars:
+    packages:
+    - bc
+    - bison
+    - flex
+    - libx11-dev
+    - x11proto-core-dev
+    - libxi6
+    - libxi-dev
+    - libxmu6
+    - libxmu-dev
+    - libxmu-headers
+    - libgl1-mesa-dev
+    - libglu1-mesa-dev
+    - libjpeg-dev
+    - libssl-dev
+    - zlib1g-dev
+    - automake
+    - cpanminus
+
+- cpanm: name="Math::Matrix"
+
+###############################################################################
+
+- name: install minc-toolkit-v2
+  apt: deb={{ item }}
+  with_items:
+    - http://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/minc-toolkit-1.9.18-20200813-Ubuntu_20.04-x86_64.deb
+    - http://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/minc-toolkit-1.0.09-20170529-Ubuntu_20.04-x86_64.deb
+
+- name: install minc-toolkit-v2 resources
+  apt: deb={{ item }}
+  with_items:
+    - http://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/beast-library-1.1.0-20121212.deb
+    - http://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/bic-mni-models-0.1.1-20120421.deb
+  when:
+    - '"resources" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: enable minc-toolkit
+  lineinfile:
+    path: /etc/profile.d/98minc-toolkit.sh
+    line: ". /opt/minc/1.9.18/minc-toolkit-config.sh"
+    create: yes
+
+###############################################################################
+
+- name: Install pyminc (python)
+  pip:
+    name: pyminc
+    executable: /opt/quarantine/miniforge/bin/pip
+  when:
+    - '"python" in ansible_run_tags or "all" in ansible_run_tags'
+
+###############################################################################
+
+- name: create minc-stuffs directories
+  file:
+    path: /opt/quarantine/minc-stuffs
+    state: directory
+
+- name: clone minc-stuffs
+  git:
+    repo: https://github.com/Mouse-Imaging-Centre/minc-stuffs.git
+    dest: /opt/quarantine/minc-stuffs/src
+    version: v0.1.25
+
+- name: Install minc-stuffs (python)
+  pip:
+    name: /opt/quarantine/minc-stuffs/src
+    executable: /opt/quarantine/miniforge/bin/pip
+  when:
+    - '"python" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Install minc-stuffs (perl)
+  shell: . /opt/minc/1.9.18/minc-toolkit-config.sh && ./autogen.sh && ./configure --prefix=/opt/minc/1.9.18 --with-minc2 --with-build-path=/opt/minc/1.9.18 && make -j {{ ansible_processor_vcpus }} && make install
+  args:
+    chdir: /opt/quarantine/minc-stuffs/src
+    creates: /opt/quarantine/minc-stuffs/src/config.log
+    executable: /bin/bash
+
+###############################################################################
+
+- name: create minc2-simple directories
+  file:
+    path: /opt/quarantine/minc2-simple/build
+    state: directory
+
+- name: clone minc2-simple
+  git:
+    repo: https://github.com/vfonov/minc2-simple.git
+    dest: /opt/quarantine/minc2-simple/src
+    version: v2.2.30
+
+- name: Install minc2-simple (python)
+  shell: . /opt/minc/1.9.18/minc-toolkit-config.sh && /opt/quarantine/miniforge/bin/python setup.py build && /opt/quarantine/miniforge/bin/python setup.py install
+  args:
+    chdir: /opt/quarantine/minc2-simple/src/python
+    creates: /opt/quarantine/miniforge/bin/xfmavg_scipy.py
+  when:
+    - '"python" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Install minc2-simple (C)
+  shell: . /opt/minc/1.9.18/minc-toolkit-config.sh && cmake -DCMAKE_INSTALL_PREFIX=/opt/minc/1.9.18 ../src && make -j {{ ansible_processor_vcpus }} && make install
+  args:
+    chdir: /opt/quarantine/minc2-simple/build
+    creates: /opt/quarantine/minc2-simple/build/CMakeCache.txt
+    executable: /bin/bash
+
+###############################################################################
+
+- name: Install pydpiper dependencies (python)
+  shell: /opt/quarantine/miniforge/bin/conda install --yes configargparse pyro4 ordered-set networkx pandas
+  when:
+    - '"python" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Install pydpiper (python)
+  pip:
+    name: https://github.com/Mouse-Imaging-Centre/pydpiper/archive/v2.0.15.tar.gz
+    executable: /opt/quarantine/miniforge/bin/pip
+  when:
+    - '"python" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Install RMINC (R)
+  shell: . /opt/minc/1.9.18/minc-toolkit-config.sh && Rscript --vanilla -e 'remotes::install_github("Mouse-Imaging-Centre/RMINC@*release", upgrade=FALSE)'
+  args:
+    creates: /usr/local/lib/R/site-library/RMINC
+  when:
+    - '"R" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Install MRIcrotome (R)
+  shell: Rscript --vanilla -e 'remotes::install_github("Mouse-Imaging-Centre/MRIcrotome", upgrade=FALSE)'
+  args:
+    creates: /usr/local/lib/R/site-library/MRIcrotome
+  when:
+    - '"R" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Install mni_cortical_statistics (R)
+  shell: Rscript --vanilla -e 'remotes::install_url("https://github.com/BIC-MNI/mni.cortical.statistics/archive/ver-0_9_5.tar.gz", upgrade=FALSE)'
+  args:
+    creates: /usr/local/lib/R/site-library/mni.cortical.statistics
+  when:
+    - '"R" in ansible_run_tags or "all" in ansible_run_tags'

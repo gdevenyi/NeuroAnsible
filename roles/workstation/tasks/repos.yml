@@ -1,0 +1,48 @@
+- name: apt keys from URL
+  apt_key: url='{{item}}' state=present
+  with_items:
+    - http://www.virtualbox.org/download/oracle_vbox.asc
+    - http://www.virtualbox.org/download/oracle_vbox_2016.asc
+    - https://dl-ssl.google.com/linux/linux_signing_key.pub
+    - https://download.docker.com/linux/ubuntu/gpg
+    - https://dl.winehq.org/wine-builds/Release.key
+    - https://dl.xanmod.org/gpg.key
+    - https://apt.kitware.com/keys/kitware-archive-latest.asc
+    - https://updates.signal.org/desktop/apt/keys.asc
+
+- name: apt keys from keyserver
+  apt_key: id={{ item }} keyserver=keyserver.ubuntu.com state=present
+  with_items:
+    - 6F036044
+    - 7FAC5991
+    - 98AB5139
+    - 2649A5A9
+    - AAD4AA21729B5780
+    - 76F1A20FF987672F
+    - A5D32F012649A5A9
+    - E298A3A825C0D65DFD57CBB651716619E084DAB9
+
+- name: repos enabled
+  apt_repository: repo='{{item}}' state=present update_cache=no
+  with_items:
+    - ppa:inkscape.dev/stable
+    - ppa:ansible/ansible
+    - ppa:libreoffice/ppa
+    - ppa:x2go/stable
+    - ppa:graphics-drivers/ppa
+    - ppa:git-core/ppa
+    - deb https://dl.winehq.org/wine-builds/ubuntu/ focal main
+    - deb http://neuro.debian.net/debian data main contrib non-free
+    - deb http://neuro.debian.net/debian focal main contrib non-free
+    - deb http://deb.xanmod.org releases main
+    - deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/
+    - ppa:c2d4u.team/c2d4u4.0+
+    - deb https://apt.kitware.com/ubuntu/ focal main
+    - ppa:linuxuprising/libpng12
+    - deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main
+
+- name: chrome repo
+  apt_repository: repo='deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' state=present filename=google-chrome update_cache=no
+
+- name: docker repo
+  apt_repository: repo='deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable' state=present filename=docker update_cache=no

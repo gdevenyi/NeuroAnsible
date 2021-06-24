@@ -1,0 +1,140 @@
+- name: Install science apt packages
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: latest
+    cache_valid_time: 3600
+  vars:
+    packages:
+      - datalad
+      - meshlab
+
+###############################################################################
+
+- name: Install 3DSlicer
+  unarchive:
+    src: https://download.slicer.org/bitstream/1442746
+    dest: /opt/quarantine
+    creates: /opt/quarantine/Slicer-4.11.20210226-linux-amd64
+    remote_src: yes
+
+- name: Enable Slicer3D
+  lineinfile:
+    path: /etc/profile.d/99Slicer3D.sh
+    line: "export PATH=/opt/quarantine/Slicer-4.11.20210226-linux-amd64${PATH:+:$PATH}"
+    create: yes
+
+###############################################################################
+
+- name: Install itksnap
+  unarchive:
+    src: http://www.nitrc.org/frs/downloadlink.php/11441
+    dest: /opt/quarantine
+    creates: /opt/quarantine/itksnap-3.8.0-20190612-Linux-gcc64-qt4
+    remote_src: yes
+
+- name: Enable itksnap
+  lineinfile:
+    path: /etc/profile.d/99itksnap.sh
+    line: "export PATH=/opt/quarantine/itksnap-3.8.0-20190612-Linux-gcc64-qt4/bin${PATH:+:$PATH}"
+    create: yes
+
+###############################################################################
+
+- name: Install mricrogl
+  unarchive:
+    src: https://github.com/rordenlab/MRIcroGL12/releases/download/v1.2.20201102/MRIcroGL_linux.zip
+    dest: /opt/quarantine
+    creates: /opt/quarantine/MRIcroGL
+    remote_src: yes
+
+- name: Enable mricrogl
+  lineinfile:
+    path: /etc/profile.d/99mricrogl.sh
+    line: "export PATH=/opt/quarantine/MRIcroGL${PATH:+:$PATH}"
+    create: yes
+
+###############################################################################
+
+- name: create dcm2niix directory
+  file:
+    path: /opt/quarantine/dcm2niix
+    state: directory
+
+- name: Install dcm2niix
+  unarchive:
+    src: https://github.com/rordenlab/dcm2niix/releases/download/v1.0.20201102/dcm2niix_lnx.zip
+    dest: /opt/quarantine/dcm2niix
+    creates: /opt/quarantine/dcm2niix/dcm2niix
+    remote_src: yes
+
+- name: Enable dcm2niix
+  lineinfile:
+    path: /etc/profile.d/99dcm2niix.sh
+    line: "export PATH=/opt/quarantine/dcm2niix${PATH:+:$PATH}"
+    create: yes
+
+###############################################################################
+
+- name: Install mricron
+  unarchive:
+    src: https://github.com/neurolabusc/MRIcron/releases/download/v1.0.20190902/MRIcron_linux.zip
+    dest: /opt/quarantine
+    creates: /opt/quarantine/mricron
+    remote_src: yes
+
+- name: Remove old dcm2niix packaged with mricron
+  file:
+    path: /opt/quarantine/mricron/dcm2niix
+    state: absent
+
+- name: Enable mricron
+  lineinfile:
+    path: /etc/profile.d/99mricron.sh
+    line: "export PATH=/opt/quarantine/mricron${PATH:+:$PATH}"
+    create: yes
+
+###############################################################################
+
+- name: install mi-brain
+  unarchive:
+    src: https://www.imeka.ca/version/MI-Brain-2020.04.09_r2e0ff5-linux-x86_64.tar.gz
+    dest: /opt/quarantine
+    creates: /opt/quarantine/MI-Brain-2020.04.09_r2e0ff5-linux-x86_64
+    remote_src: yes
+
+- name: add mi-brain to path
+  lineinfile:
+    path: /etc/profile.d/99mi-brain.sh
+    line: "export PATH=/opt/quarantine/MI-Brain-2020.04.09_r2e0ff5-linux-x86_64${PATH:+:$PATH}"
+    create: yes
+
+###############################################################################
+
+- name: install mango
+  unarchive:
+    src: http://ric.uthscsa.edu/mango/downloads/mango_unix.zip
+    dest: /opt/quarantine
+    creates: /opt/quarantine/Mango
+    remote_src: yes
+
+- name: add mango to path
+  lineinfile:
+    path: /etc/profile.d/99mango.sh
+    line: "export PATH=/opt/quarantine/Mango${PATH:+:$PATH}"
+    create: yes
+
+###############################################################################
+
+- name: Install connectome-workbench
+  unarchive:
+    src: https://www.humanconnectome.org/storage/app/media/workbench/workbench-linux64-v1.5.0.zip
+    dest: /opt/quarantine
+    creates: /opt/quarantine/workbench
+    remote_src: yes
+
+- name: add connectome workbench to path
+  lineinfile:
+    path: /etc/profile.d/99workbench.sh
+    line: "export PATH=/opt/quarantine/workbench/bin_linux64${PATH:+:$PATH}"
+    create: yes

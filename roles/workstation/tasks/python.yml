@@ -1,0 +1,69 @@
+- name: download miniforge
+  get_url:
+    url: https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+    dest: /tmp/Miniforge3-Linux-x86_64.sh
+
+- name: install anaconda
+  shell: bash /tmp/Miniforge3-Linux-x86_64.sh -b -p /opt/quarantine/miniforge
+  args:
+    creates: /opt/quarantine/miniforge
+
+- name: configure miniforge condarc
+  copy: src=files/condarc dest=/opt/quarantine/miniforge/.condarc
+
+- name: install accelerated conda install
+  shell: /opt/quarantine/miniforge/bin/conda install --yes pycryptosat
+
+- name: Install conda packages
+  shell: >
+      /opt/quarantine/miniforge/bin/conda install --yes
+      nipype nilearn simpleitk itk dipy jupyterlab nibabel
+      serpent biopython seaborn statsmodels pandas
+      widgetsnbextension matplotlib xarray zarr dask pathos mrtrix3
+
+- name: Install conda pip packages
+  pip:
+    name: "{{ packages }}"
+    executable: /opt/quarantine/miniforge/bin/pip
+  vars:
+    packages:
+      - qbatch
+      - neurosynth
+      - neuroquery
+
+- name: activate conda for all terminals
+  file:
+    src: /opt/quarantine/miniforge/etc/profile.d/conda.sh
+    dest: /etc/profile.d/99conda.sh
+    state: link
+
+###############################################################################
+
+- name: Create cbptools env
+  shell: >
+    /opt/quarantine/miniforge/bin/conda create -n cbptools --yes
+    matplotlib==3.0.3 nibabel numpy pandas pyyaml scikit-learn
+    scipy seaborn scikit-image plotly
+  args:
+    creates: /opt/quarantine/miniforge/envs/cbptools
+
+- name: Install cbptools (python)
+  pip:
+    name: cbptools
+    executable: /opt/quarantine/miniforge/envs/cbptools/bin/pip
+
+# ###############################################################################
+#
+# - name: Create allensdk env
+#   shell: /opt/quarantine/miniforge/bin/conda create -n allensdk --yes python pip
+#
+# - name: Install allensdk
+#   pip:
+#     name: allensdk
+#     executable: /opt/quarantine/miniforge/envs/allensdk/bin/pip
+#
+#
+# ##############################################################################
+
+- name: Cleanup conda
+  shell: /opt/quarantine/miniforge/bin/conda clean --all -f -y

@@ -1,0 +1,76 @@
+- name: create resources directory
+  file:
+    path: /opt/quarantine/resources
+    state: directory
+
+- name: Download and install minc MNI atlases
+  include: resources-atlas-include.yml
+  loop:
+   - http://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_lin_minc2.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_nl_VI_minc2.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09a_minc2.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_asym_09a_minc2.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09b_minc2.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_asym_09b_minc2.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09c_minc2.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_asym_09c_minc2.zip
+   - https://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_nlin_sym_09c_CerebrA_minc2.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/colin27/mni_colin27_1998_minc2.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/colin27/mni_colin27_2008_minc2.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/colin27/mni_colin27_2008_fuzzy_minc2.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/mni305/mni305_lin_minc2.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/nihpd/obj1/nihpd_sym_all_minc2.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/nihpd/obj1/nihpd_asym_all_minc2.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/nihpd/obj2/nihpd_obj2_asym_minc2.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/PD25/mni_PD25_20170213_minc2.zip
+   - http://www.bic.mni.mcgill.ca/users/llewis/CIVET_files/CIVET_2.0.tar.gz
+   - http://www.bic.mni.mcgill.ca/users/llewis/CIVET_files/CIVET_1.12.tar.gz
+  when:
+    - '"minc" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Download and install nifti MNI atlases
+  include: resources-atlas-include.yml
+  loop:
+   - http://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_lin_nifti.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_nl_VI_nifti.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09a_nifti.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_asym_09a_nifti.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09b_nifti.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_asym_09b_nifti.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09c_nifti.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_asym_09c_nifti.zip
+   - https://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_nlin_sym_09c_CerebrA_nifti.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/colin27/mni_colin27_1998_nifti.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/colin27/mni_colin27_2008_nifti.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/colin27/mni_colin27_2008_fuzzy_nifti.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/mni305/mni305_lin_nifti.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/nihpd/obj1/nihpd_sym_all_nifti.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/nihpd/obj1/nihpd_asym_all_nifti.zip
+   - http://www.bic.mni.mcgill.ca/~vfonov/nihpd/obj2/nihpd_obj2_asym_nifti.zip
+   - http://packages.bic.mni.mcgill.ca/mni-models/PD25/mni_PD25_20170213_nifti.zip
+
+- name: Download CoBrALab atlas labels
+  git:
+    repo: https://github.com/CoBrALab/atlases.git
+    dest: /opt/quarantine/resources/cobralab-atlases
+  when:
+    - '"cobralab" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: create cobralab brains directory
+  file:
+    path: /opt/quarantine/resources/cobralab-atlases/brains
+    state: directory
+  when:
+    - '"cobralab" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Download CoBrALab atlases
+  unarchive:
+    src: "{{ item }}"
+    dest: /opt/quarantine/resources/cobralab-atlases/brains
+    creates: /opt/quarantine/resources/cobralab-atlases/brains/brains_t1
+    remote_src: yes
+  loop:
+    - http://cobralab.net/files/brains_t1.tar.bz2
+    - http://cobralab.net/files/brains_t2.tar.bz2
+  when:
+    - '"cobralab" in ansible_run_tags or "all" in ansible_run_tags'
