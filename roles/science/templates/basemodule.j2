@@ -1,0 +1,18 @@
+conflict(myModuleName())
+{% if prereqs is defined %}
+{% for prereq in prereqs %}
+prereq("{{ prereq }}")
+{% endfor %}
+{% endif %}
+
+local dirname = require 'posix.libgen'.dirname
+local basepath = pathJoin(dirname(dirname(dirname(myFileName()))),"software",myModuleName(),myModuleVersion(),"install")
+
+prepend_path("PATH", basepath)
+prepend_path("PATH", pathJoin(basepath,"bin"))
+
+{% if extra_opts is defined %}
+{% for item in extra_opts %}
+{{ item }}
+{% endfor %}
+{% endif %}

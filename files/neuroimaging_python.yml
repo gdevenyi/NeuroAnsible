@@ -1,0 +1,30 @@
+name: neuroimaging_python
+dependencies:
+  - pip
+  - nibabel
+  - nipype
+  - dipy
+  - nitime
+  - nilearn
+  - polars
+  - pandas
+  - numpy
+  - scipy
+  - scikit-learn
+  - scikit-image
+  - matplotlib
+  - datalad
+  - seaborn
+  - statsmodels
+  - jupyterlab
+  - ipython
+  - simpleitk
+  - itk
+  - vtk
+  - biopython
+  - regex
+  - h5py
+  - pip:
+    - neurosynth
+    - neuroquery
+    - git+https://github.com/netneurolab/pypyls

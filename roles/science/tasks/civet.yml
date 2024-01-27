@@ -1,0 +1,26 @@
+---
+- name: Create civet directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/civet/2.1.1/install
+    - /opt/quarantine/software/civet/2.1.1/src
+
+
+- name: Build civet singularity container
+  shell: apptainer build /opt/quarantine/software/civet/2.1.1/src/civet.simg docker://mcin/civet:2.1.1
+  args:
+    creates: /opt/quarantine/software/civet/2.1.1/src/civet.simg
+
+- name: Create a symbolic link
+  ansible.builtin.file:
+    src: /opt/quarantine/software/civet/2.1.1/src/civet.simg
+    dest: /opt/quarantine/software/civet/2.1.1/install/CIVET_Processing_Pipeline
+    state: link
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/civet/2.1.1/module
+  notify: link modules

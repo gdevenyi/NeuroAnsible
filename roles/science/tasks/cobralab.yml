@@ -1,0 +1,91 @@
+---
+- name: Create CoBrALab directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/minc-toolkit-extras/20231023
+    - /opt/quarantine/software/iterativeN3/20230821
+    - /opt/quarantine/software/iterativeN4_multispectral/20210503
+    - /opt/quarantine/software/minc-bpipe-library/20230721
+    - /opt/quarantine/software/bpipe/0.9.12/install
+
+- name: clone minc-toolkit-extras
+  ansible.builtin.git:
+    repo: https://github.com/CoBrALab/minc-toolkit-extras.git
+    dest: /opt/quarantine/software/minc-toolkit-extras/20231023/install
+    version: 7016282fdbd3f7b54c125c4bc6b8750ba4d2cc8b
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/minc-toolkit-extras/20231023/module
+  vars:
+    prereqs:
+      - minc-toolkit-v2
+      - ANTs
+  notify: link modules
+
+- name: clone iterativeN3
+  ansible.builtin.git:
+    repo: https://github.com/CoBrALab/iterativeN3.git
+    dest: /opt/quarantine/software/iterativeN3/20230821/install
+    version: 070bf85bf52b4ea09921995e3a5fea549f766fec
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/iterativeN3/20230821/module
+  vars:
+    prereqs:
+      - minc-toolkit-v2
+      - ANTs
+  notify: link modules
+
+
+- name: clone iterativeN4
+  ansible.builtin.git:
+    repo: https://github.com/CoBrALab/iterativeN4_multispectral.git
+    dest: /opt/quarantine/software/iterativeN4_multispectral/20210503/install
+    version: e2ffa1c5f8e6864a19209b2c3a67b6ff1309bd50
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/iterativeN4_multispectral/20210503/module
+  vars:
+    prereqs:
+      - minc-toolkit-v2
+      - ANTs
+  notify: link modules
+
+- name: clone minc-bpipe-library
+  ansible.builtin.git:
+    repo: https://github.com/CoBrALab/minc-bpipe-library.git
+    dest: /opt/quarantine/software/minc-bpipe-library/20230721/install
+    version: c7561d6a3f9dd84de3f46c3fa5731f15fc7255a4
+
+- name: Install bpipe dependency
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: latest
+    autoclean: yes
+    autoremove: yes
+  vars:
+    packages:
+      - default-jre
+
+- name: install bpipe
+  unarchive:
+    src: https://github.com/ssadedin/bpipe/releases/download/0.9.12/bpipe-0.9.12.tar.gz
+    dest: /opt/quarantine/software/bpipe/0.9.12/install
+    creates: /opt/quarantine/software/bpipe/0.9.12/install/bin/bpipe
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/bpipe/0.9.12/module
+  notify: link modules

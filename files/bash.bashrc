@@ -47,7 +47,7 @@ if [ ! -e "$HOME/.sudo_as_admin_successful" ] && [ ! -e "$HOME/.hushlogin" ] ; t
 	cat <<-EOF
 	To run a command as administrator (user "root"), use "sudo <command>".
 	See "man sudo_root" for details.
-	
+
 	EOF
     fi
     esac
@@ -70,12 +70,12 @@ if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found/command-no
 	}
 fi
 
-if [ -d /etc/profile.d ]; then
-  for i in /etc/profile.d/*.sh; do
-    if [ -r $i ]; then
-      . $i
-    fi
-  done
-  unset i
+if ! shopt -q login_shell; then
+  if [ -d /etc/profile.d ]; then
+    for i in /etc/profile.d/*.sh; do
+      if [ -r $i ]; then
+        . $i
+      fi
+    done
+  fi
 fi
-

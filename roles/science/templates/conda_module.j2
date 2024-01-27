@@ -1,0 +1,30 @@
+conflict(myModuleName())
+
+local dirname = require 'posix.libgen'.dirname
+local basepath = pathJoin(dirname(dirname(dirname(myFileName()))),"software",myModuleName(),myModuleVersion(),"{{ modulename }}")
+
+local __conda_setup = "\"$(micromamba shell hook --shell " .. myShellName() .. ")\""
+
+execute {
+    cmd = "eval " .. __conda_setup,
+    modeA = {"load"}
+}
+
+execute {
+    cmd = "micromamba activate " .. basepath,
+    modeA = {"load"}
+}
+
+ execute {
+     cmd = "micromamba deactivate",
+     modeA = {"unload"}
+ }
+
+vars = {"__add_sys_prefix_to_path", "__conda_activate", "__conda_exe", "__conda_hashr", "__conda_reactivate",
+        "_CE_CONDA", "conda", "CONDA_EXE", "CONDA_PYTHON_EXE", "CONDA_SHLVL"}
+for i, var in pairs(vars) do
+    execute {
+        cmd = "unset " .. var,
+        modeA = {"unload"}
+    }
+end

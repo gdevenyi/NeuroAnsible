@@ -1,0 +1,33 @@
+---
+- name: Create ANTs directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/fsl/6.0.7.4/install
+
+- name: download fsl
+  get_url:
+    url: https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py
+    dest: /tmp/fslinstaller.py
+
+- name: install fsl
+  shell: python /tmp/fslinstaller.py --dest /opt/quarantine/software/fsl/6.0.7.4/install --fslversion 6.0.7.4 --no_env --overwrite
+  args:
+    creates: /opt/quarantine/software/fsl/6.0.7.4/install
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/fsl/6.0.7.4/module
+  vars:
+    extra_opts:
+      - setenv("FSLDIR", basepath)
+      - setenv("FSLWISH", pathJoin(basepath,"bin/fslwish"))
+      - setenv("FSLTCLSH", pathJoin(basepath,"bin/fsltclsh"))
+      - setenv("FSLMULTIFILEQUIT", "TRUE")
+      - setenv("FSL_LOAD_NIFTI_EXTENSIONS", "0")
+      - setenv("FSL_SKIP_GLOBAL", "0")
+      - setenv("FSLOUTPUTTYPE", "NIFTI_GZ")
+      - prepend_path("PATH", pathJoin(basepath, "share/fsl/bin"))
+  notify: link modules

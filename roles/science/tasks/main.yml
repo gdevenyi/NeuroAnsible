@@ -1,0 +1,19 @@
+---
+
+- {import_tasks: modules.yml, tags: modules}
+- {import_tasks: afni.yml, tags: afni}
+- {import_tasks: freesurfer.yml, tags: freesurfer}
+- {import_tasks: ants.yml, tags: ants}
+- {import_tasks: fsl.yml, tags: fsl}
+- {import_tasks: containers.yml, tags: [containers,civet,fmriprep,fastsurfer,cpac] }
+- {import_tasks: fmriprep.yml, tags: fmriprep}
+- {import_tasks: fastsurfer.yml, tags: fastsurfer}
+- {import_tasks: cpac.yml, tags: cpac}
+- {import_tasks: civet.yml, tags: civet}
+- {import_tasks: R.yml, tags: R }
+- {import_tasks: python.yml, tags: python }
+- {import_tasks: minc.yml, tags: minc }
+- {import_tasks: cobralab.yml, tags: cobralab }
+- {import_tasks: mri_misc.yml, tags: misc }
+- {import_tasks: mrtrix.yml, tags: python }
+- {import_tasks: resources.yml, tags: resources}

@@ -1,0 +1,25 @@
+---
+- name: Create quarantine paths
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software
+    - /opt/quarantine/modulefiles
+
+- name: lmod
+  ansible.builtin.package:
+    name: lmod
+    state: present
+
+- name: Fix environment variables for terminals/ssh in /etc/bash.bashrc
+  copy: src=files/bash.bashrc dest=/etc/bash.bashrc
+
+- name: Set MODULEPATH and QUARANTINE_PATH
+  copy: src=files/zzquarantine_path.sh dest=/etc/profile.d
+
+- name: Copy module linker
+  copy:
+    src: files/link-modules.sh
+    dest: /opt/quarantine/modulefiles
+    mode: u=rwx,g=rx,o=r

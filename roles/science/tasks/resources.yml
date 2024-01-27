@@ -1,10 +1,12 @@
+---
+
 - name: create resources directory
   file:
     path: /opt/quarantine/resources
     state: directory
 
 - name: Download and install minc MNI atlases
-  include: resources-atlas-include.yml
+  include_tasks: resources-atlas-include.yml
   loop:
    - http://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_lin_minc2.zip
    - http://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_nl_VI_minc2.zip
@@ -29,7 +31,7 @@
     - '"minc" in ansible_run_tags or "all" in ansible_run_tags'
 
 - name: Download and install nifti MNI atlases
-  include: resources-atlas-include.yml
+  include_tasks: resources-atlas-include.yml
   loop:
    - http://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_lin_nifti.zip
    - http://packages.bic.mni.mcgill.ca/mni-models/icbm152/mni_icbm152_nl_VI_nifti.zip
@@ -56,7 +58,7 @@
   when:
     - '"cobralab" in ansible_run_tags or "all" in ansible_run_tags'
 
-- name: create cobralab brains directory
+- name: create CoBrALab brains directory
   file:
     path: /opt/quarantine/resources/cobralab-atlases/brains
     state: directory
@@ -70,7 +72,8 @@
     creates: /opt/quarantine/resources/cobralab-atlases/brains/brains_t1
     remote_src: yes
   loop:
-    - http://cobralab.net/files/brains_t1.tar.bz2
-    - http://cobralab.net/files/brains_t2.tar.bz2
+    - https://github.com/CoBrALab/atlases/releases/download/2.0/brains_t1.tar.bz2
+    - https://github.com/CoBrALab/atlases/releases/download/2.0/brains_t2.tar.bz2
+    - https://github.com/CoBrALab/atlases/releases/download/2.0/masks.tar.bz2
   when:
     - '"cobralab" in ansible_run_tags or "all" in ansible_run_tags'

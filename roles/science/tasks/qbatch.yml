@@ -1,0 +1,26 @@
+---
+# Install pipx
+- name: Install pipx
+  ansible.builtin.apt:
+    update_cache: yes
+    state: present
+    autoclean: yes
+    autoremove: yes
+    pkg: pipx
+
+# pipx directory
+- name: ensure /opt/pipx
+  ansible.builtin.file:
+    path: /opt/pipx
+    state: directory
+    mode: 0755
+
+- name: install qbatch
+  community.general.pipx:
+    name: "{{ item }}"
+    state: present
+  environment:
+    PIPX_HOME: /opt/pipx
+    PIPX_BIN_DIR: /usr/local/bin
+  with_items:
+    - qbatch

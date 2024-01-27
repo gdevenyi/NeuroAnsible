@@ -1,0 +1,6 @@
+---
+- name: install miscellaneous apptainer
+  apt: deb={{ item }}
+  with_items:
+    - https://github.com/apptainer/apptainer/releases/download/v1.2.5/apptainer_1.2.5_amd64.deb
+  ignore_errors: true

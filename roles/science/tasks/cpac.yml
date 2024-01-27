@@ -1,0 +1,32 @@
+---
+- name: Create CPAC directory
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/cpac/0.5.1/install/bin
+
+# Install pipx
+- name: Install pipx
+  ansible.builtin.apt:
+    update_cache: yes
+    state: present
+    autoclean: yes
+    autoremove: yes
+    pkg: pipx
+
+- name: install cpac python wrapper
+  community.general.pipx:
+    name: "{{ item }}"
+    state: present
+  environment:
+    PIPX_HOME: /opt/quarantine/software/cpac/0.5.1/install
+    PIPX_BIN_DIR: /opt/quarantine/software/cpac/0.5.1/install/bin
+  with_items:
+    - cpac==0.5.1
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/cpac/0.5.1/module
+  notify: link modules

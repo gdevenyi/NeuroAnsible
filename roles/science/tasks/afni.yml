@@ -1,0 +1,66 @@
+---
+- name: Create AFNI directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/afni/202312/install
+
+- name: Install AFNI dependencies
+  ansible.builtin.apt:
+    update_cache: yes
+    state: present
+    autoclean: yes
+    autoremove: yes
+    pkg:
+      - tcsh
+      - xfonts-base
+      - libssl-dev
+      - python-is-python3
+      - python3-matplotlib
+      - python3-numpy
+      - python3-flask
+      - python3-flask-cors
+      - python3-pil
+      - gsl-bin
+      - netpbm
+      - libjpeg62
+      - xvfb
+      - libglu1-mesa-dev
+      - libglw1-mesa
+      - libxm4
+      - build-essential
+      - libcurl4-openssl-dev
+      - libxml2-dev
+      - libgfortran-11-dev
+      - libgomp1
+      - xfonts-100dpi
+      - cmake
+      - libgdal-dev
+      - libopenblas-dev
+      - libnode-dev
+      - libudunits2-dev
+
+# Fix AFNI being built against a different version of gsl
+# https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu22.html#id4
+- name: Link GSL library for AFNI to work
+  file:
+    src: /usr/lib/x86_64-linux-gnu/libgsl.so.27
+    dest: /usr/lib/x86_64-linux-gnu/libgsl.so.19
+    state: link
+
+- name: Download AFNI installer
+  get_url:
+    url: https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
+    dest: /tmp/@update.afni.binaries
+
+- name: Run AFNI Installer
+  shell: tcsh /tmp/@update.afni.binaries -package linux_ubuntu_16_64 -apsearch yes -bindir /opt/quarantine/software/afni/202312/install
+  args:
+    creates: /opt/quarantine/software/afni/202312/install/afni
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/afni/202312/module
+  notify: link modules

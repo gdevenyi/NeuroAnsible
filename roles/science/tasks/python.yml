@@ -1,0 +1,28 @@
+---
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/conda/202311
+    - /etc/conda
+
+# Ensure conda config is correct
+- name: copy condarc
+  copy: src=files/condarc dest=/etc/conda/condarc
+
+- name: copy python environment file
+  copy: src=files/neuroimaging_python.yml dest=/opt/quarantine/software/conda/202311
+
+- name: create conda environment
+  shell: micromamba create --quiet --yes -p /opt/quarantine/software/conda/202311/conda-base -f /opt/quarantine/software/conda/202311/neuroimaging_python.yml
+  args:
+    creates: /opt/quarantine/software/conda/202311/conda-base/bin/python
+
+- name: Install module
+  template:
+    src: templates/conda_module.j2
+    dest: /opt/quarantine/software/conda/202311/module
+  vars:
+    modulename: conda-base
+  notify: link modules

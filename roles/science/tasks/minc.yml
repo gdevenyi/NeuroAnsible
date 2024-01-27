@@ -1,0 +1,144 @@
+---
+- name: Create minc directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/minc-toolkit-v2/1.9.18/install
+    - /opt/quarantine/software/minc-toolkit-v2/1.9.18/src
+    - /opt/quarantine/software/minc-stuffs/v0.1.25
+    - /opt/quarantine/software/minc2-simple/v2.2.30/build
+
+- name: Install minc-toolkit-v2 build deps
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+    state: latest
+    autoclean: yes
+    autoremove: yes
+  vars:
+    packages:
+      - bc
+      - bison
+      - flex
+      - libx11-dev
+      - x11proto-core-dev
+      - libxi6
+      - libxi-dev
+      - libxmu6
+      - libxmu-dev
+      - libxmu-headers
+      - libgl1-mesa-dev
+      - libglu1-mesa-dev
+      - libjpeg-dev
+      - libssl-dev
+      - zlib1g-dev
+      - automake
+      - cpanminus
+      - patchelf
+
+- cpanm: name="Math::Matrix"
+
+- name: Download minc-toolkit-v2
+  ansible.builtin.get_url:
+    url: "{{ item }}"
+    dest: /opt/quarantine/software/minc-toolkit-v2/1.9.18/src
+  with_items:
+    - "https://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/minc-toolkit-1.9.18-20220625-Ubuntu_20.04-x86_64.deb"
+    - "http://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/beast-library-1.1.0-20121212.deb"
+    - "http://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/bic-mni-models-0.1.1-20120421.deb"
+
+- name: Unpack minc-toolkit-v2 and delete unneeded ANTs tools
+  shell: dpkg -x minc-toolkit-1.9.18-20220625-Ubuntu_20.04-x86_64.deb /tmp/minctemp && mv /tmp/minctemp/opt/minc/1.9.18/* ../install && rm -f ../install/bin/*ants* ../install/bin/*ANTS* ../install/bin/Image* && rm -rf /tmp/minctmp
+  args:
+    chdir: /opt/quarantine/software/minc-toolkit-v2/1.9.18/src
+    creates: /opt/quarantine/software/minc-toolkit-v2/1.9.18/install/bin/mincinfo
+
+- name: Unpack beast-library-1.1
+  shell: dpkg -x beast-library-1.1.0-20121212.deb /tmp/minctemp && mv /tmp/minctemp/opt/minc/share/* ../install/share && rm -rf /tmp/minctemp
+  args:
+    chdir: /opt/quarantine/software/minc-toolkit-v2/1.9.18/src
+    creates: /opt/quarantine/software/minc-toolkit-v2/1.9.18/install/share/beast-library-1.1
+
+- name: Unpack bic-mni-models
+  shell: dpkg -x bic-mni-models-0.1.1-20120421.deb /tmp/minctemp && mv /tmp/minctemp/opt/minc/share/* ../install/share && rm -rf /tmp/minctemp
+  args:
+    chdir: /opt/quarantine/software/minc-toolkit-v2/1.9.18/src
+    creates: /opt/quarantine/software/minc-toolkit-v2/1.9.18/install/share/icbm152_model_09c
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/minc-toolkit-v2/1.9.18/module
+  vars:
+    extra_opts:
+      - prepend_path("LD_LIBRARY_PATH", pathJoin(basepath, "lib"))
+      - setenv( "MINC_TOOLKIT", basepath )
+      - setenv( "MINC_TOOLKIT_VERSION", "1.9.18-20220625")
+      - setenv( "MINC_FORCE_V2", "1" )
+      - setenv( "MINC_COMPRESS", "4" )
+      - setenv( "VOLUME_CACHE_THRESHOLD", "-1" )
+      - prepend_path( "MNI_DATAPATH", pathJoin(basepath,"share") )
+      - prepend_path( "MNI_DATAPATH", pathJoin(quarantinepath,"resources") )
+      - prepend_path( "PATH",           pathJoin(basepath,"pipeline"))
+      - prepend_path( "PERL5LIB",       pathJoin(basepath,"pipeline"))
+      - prepend_path( "PERL5LIB",       pathJoin(basepath,"perl"))
+  notify: link modules
+
+
+- name: Install pyminc (python)
+  shell: micromamba run -r /opt/quarantine/software/conda/202311/conda-base pip install pyminc
+  args:
+    creates: /opt/quarantine/software/conda/202311/conda-base/lib/python3.11/site-packages/pyminc
+  when:
+    - '"python" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: clone minc-stuffs
+  git:
+    repo: https://github.com/Mouse-Imaging-Centre/minc-stuffs.git
+    dest: /opt/quarantine/software/minc-stuffs/v0.1.25/src
+    version: v0.1.25
+
+- name: get images in remote python src dir
+  find:
+    paths: "/opt/quarantine/software/minc-stuffs/v0.1.25/src/python/"
+    file_type: file
+    patterns: '*'
+  register: minc_python_bins
+
+- name: Install minc-stuffs (python)
+  copy:
+    src: "{{item.path}}"
+    dest: "/opt/quarantine/software/minc-toolkit-v2/1.9.18/install/bin"
+    remote_src: yes
+  loop: "{{ minc_python_bins.files }}"
+  when:
+    - '"python" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Install minc-stuffs (perl)
+  shell:  ./autogen.sh && ./configure --prefix=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install --with-minc2 --with-build-path=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install && make -j {{ ansible_processor_vcpus }} && make install
+  args:
+    chdir: /opt/quarantine/software/minc-stuffs/v0.1.25/src
+    creates: /opt/quarantine/software/minc-toolkit-v2/1.9.18/install/bin/add_noise_to_volume
+    executable: /bin/bash
+
+- name: clone minc2-simple
+  git:
+    repo: https://github.com/vfonov/minc2-simple.git
+    dest: /opt/quarantine/software/minc2-simple/v2.2.30/src
+    version: v2.2.30
+
+- name: Install minc2-simple (python)
+  shell: MINC_TOOLKIT=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install micromamba run -r /opt/quarantine/software/conda/202311/conda-base pip install /opt/quarantine/software/minc2-simple/v2.2.30/src/python
+  args:
+    creates: /opt/quarantine/software/conda/202311/conda-base/lib/python3.11/site-packages/minc2_simple
+  when:
+    - '"python" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Install minc2-simple (C)
+  shell: cmake -DCMAKE_INSTALL_PREFIX=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install ../src && make -j {{ ansible_processor_vcpus }} && make install
+  args:
+    chdir: /opt/quarantine/software/minc2-simple/v2.2.30/build
+    creates: /opt/quarantine/software/minc-toolkit-v2/1.9.18/install/lib/libminc2-simple.so
+    executable: /bin/bash
+
