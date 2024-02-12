@@ -4,7 +4,9 @@ An ansible playbook to deploy a complete standalone neuroimaging workstation.
 
 ## Sponsorship
 
-This software is developed and supported by [Gabriel Devenyi Consulting](https://gabriel.devenyi.ca/consulting/)
+This software is developed and supported by [Gabriel Devenyi Consulting](https://gabriel.devenyi.ca/consulting/).
+
+To request support in the use of this deployment software, or request additional software be added, please contact us.
 
 ## Prerequisites
 
