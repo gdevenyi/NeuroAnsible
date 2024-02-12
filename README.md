@@ -17,11 +17,11 @@ Prerequiste to use this playbook is SSH access to a workstation you wish to conf
 
 ## Software Requirements
 
-This playbook uses [https://www.ansible.com/](ansible) to deploy on the machine
+This playbook uses [ansible](https://www.ansible.com/) to deploy on the machine
 controlling the setup. This machine does not need to be the machine that will
 ultimately be the setup workstation.
 
-See the [https://docs.ansible.com/ansible/latest/installation_guide/index.html](Ansible installation guide)
+See the [Ansible installation guide](https://docs.ansible.com/ansible/latest/installation_guide/index.html).
 
 Once ansible is installed, you will need to pull in a external role used by this package:
 
