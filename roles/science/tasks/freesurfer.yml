@@ -1,5 +1,4 @@
 ---
-
 - name: Create freesurfer directories
   file:
     path: "{{ item }}"
@@ -7,7 +6,6 @@
   loop:
     - /opt/quarantine/software/freesurfer/7.4.1
     - /opt/quarantine/software/freesurfer/7.4.1/install
-
 
 - name: install freesurfer 7.4.1
   unarchive:
