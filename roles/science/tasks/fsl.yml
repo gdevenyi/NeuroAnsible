@@ -5,14 +5,15 @@
     state: directory
   loop:
     - /opt/quarantine/software/fsl/6.0.7.4/install
+    - /opt/quarantine/software/fsl/6.0.7.4/src
 
 - name: download fsl
   get_url:
     url: https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py
-    dest: /tmp/fslinstaller.py
+    dest: /opt/quarantine/software/fsl/6.0.7.4/src/fslinstaller.py
 
 - name: install fsl
-  shell: python /tmp/fslinstaller.py --dest /opt/quarantine/software/fsl/6.0.7.4/install --fslversion 6.0.7.4 --no_env --overwrite
+  shell: python /opt/quarantine/software/fsl/6.0.7.4/src/fslinstaller.py --dest /opt/quarantine/software/fsl/6.0.7.4/install --fslversion 6.0.7.4 --no_env --overwrite
   args:
     creates: /opt/quarantine/software/fsl/6.0.7.4/install
 
