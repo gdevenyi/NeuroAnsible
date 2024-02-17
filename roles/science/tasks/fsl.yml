@@ -15,7 +15,7 @@
 - name: install fsl
   shell: python /opt/quarantine/software/fsl/6.0.7.4/src/fslinstaller.py --dest /opt/quarantine/software/fsl/6.0.7.4/install --fslversion 6.0.7.4 --no_env --overwrite
   args:
-    creates: /opt/quarantine/software/fsl/6.0.7.4/install
+    creates: /opt/quarantine/software/fsl/6.0.7.4/install/LICENSE.txt
 
 - name: Install module
   template:
