@@ -13,7 +13,7 @@
     dest: /opt/quarantine/software/freesurfer/7.4.1/install
     creates: /opt/quarantine/software/freesurfer/7.4.1/install/SetUpFreeSurfer.sh
     remote_src: yes
-    extra_opts: [--strip-components=1]
+    extra_opts: [--strip-components=2]
 
 - name: Install module
   template:
@@ -28,7 +28,7 @@
       - setenv("MINC_BIN_DIR", pathJoin(basepath,"mni/bin"))
       - setenv("FSFAST_HOME", pathJoin(basepath,"fsfast"))
       - setenv("FREESURFER", basepath)
-      - setenv( "FREESURFER_HOME", basepath)
+      - setenv("FREESURFER_HOME", basepath)
       - setenv("MNI_DATAPATH", pathJoin(basepath,"mni/data"))
       - setenv("FS_OVERRIDE", "0")
       - setenv("FUNCTIONALS_DIR", pathJoin(basepath,"sessions"))
