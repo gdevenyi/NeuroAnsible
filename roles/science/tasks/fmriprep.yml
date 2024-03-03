@@ -14,5 +14,5 @@
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/fmriprep/23.1.4/install/module
+    dest: /opt/quarantine/software/fmriprep/23.1.4/module
   notify: link modules
