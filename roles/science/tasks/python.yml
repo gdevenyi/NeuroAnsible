@@ -7,9 +7,6 @@
     - /opt/quarantine/software/conda/202311
     - /etc/conda
 
-# Ensure conda config is correct
-- name: copy condarc
-  copy: src=files/condarc dest=/etc/conda/condarc
 
 - name: copy python environment file
   copy: src=files/neuroimaging_python.yml dest=/opt/quarantine/software/conda/202311
@@ -18,6 +15,11 @@
   shell: micromamba create --quiet --yes -p /opt/quarantine/software/conda/202311/conda-base -f /opt/quarantine/software/conda/202311/neuroimaging_python.yml
   args:
     creates: /opt/quarantine/software/conda/202311/conda-base/bin/python
+
+# Copy condarc into environment
+- name: copy condarc
+  copy: src=files/condarc dest=/opt/quarantine/software/conda/202311/conda-base
+
 
 - name: Install module
   template:
