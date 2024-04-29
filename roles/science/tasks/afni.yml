@@ -8,10 +8,10 @@
 
 - name: Install AFNI dependencies
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     state: present
-    autoclean: yes
-    autoremove: yes
+    autoclean: true
+    autoremove: true
     pkg:
       - tcsh
       - xfonts-base
