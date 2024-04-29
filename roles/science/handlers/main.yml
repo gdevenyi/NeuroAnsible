@@ -1,4 +1,4 @@
 - name: link modules
-  ansible.builtin.shell: /opt/quarantine/modulefiles/link-modules.sh
+  ansible.builtin.command: /opt/quarantine/modulefiles/link-modules.sh
   args:
     chdir: /opt/quarantine/modulefiles
