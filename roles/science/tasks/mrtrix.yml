@@ -1,6 +1,14 @@
 ---
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/mrtrix3/3.0.4
+    - /opt/quarantine/software/mrtrix3tissue/5.2.9
+
 - name: install mrtrix3
-  shell: micromamba create --quiet --yes -c mrtrix3 -p /opt/quarantine/software/mrtrix3/3.0.4/mrtrix3 mrtrix3=3.0.4
+  shell: micromamba create --quiet --yes -c mrtrix3 -c conda-forge -p /opt/quarantine/software/mrtrix3/3.0.4/mrtrix3 mrtrix3=3.0.4
   args:
     creates: /opt/quarantine/software/mrtrix3/3.0.4/mrtrix3/bin/mrcalc
 
@@ -10,4 +18,39 @@
     dest: /opt/quarantine/software/mrtrix3/3.0.4/module
   vars:
     modulename: mrtrix3
+  notify: link modules
+
+- name: Install mtrix3tissue dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    state: present
+    autoclean: true
+    autoremove: true
+    pkg:
+      - python3
+      - libeigen3-dev
+      - zlib1g-dev
+      - libqt5opengl5-dev
+      - libqt5svg5-dev
+      - libgl1-mesa-dev
+      - libfftw3-dev
+      - libtiff5-dev
+      - libpng-dev
+
+- name: Git checkout mrtrix3tissue
+  ansible.builtin.git:
+    repo: https://github.com/PennLINC/MRtrix3Tissue
+    dest: /opt/quarantine/software/mrtrix3tissue/5.2.9/install
+    #version: 3Tissue_v5.2.9
+
+- name: Build mrtrix3tissue
+  shell: ./configure && ./build
+  args:
+    creates: /opt/quarantine/software/mrtrix3tissue/5.2.9/install/bin/mrview
+    chdir: /opt/quarantine/software/mrtrix3tissue/5.2.9/install
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/mrtrix3tissue/5.2.9/module
   notify: link modules
