@@ -1,0 +1,38 @@
+---
+- name: Create nvidia module directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/nvhpc/24.3/src
+    - /opt/quarantine/software/cuda/12.3.1/src
+
+- name: Install nvidia development dependencies
+  ansible.builtin.apt:
+    update_cache: yes
+    state: present
+    autoclean: yes
+    autoremove: yes
+    pkg:
+      - g++
+      - freeglut3-dev
+      - build-essential
+      - libx11-dev
+      - libxmu-dev
+      - libxi-dev
+      - libglu1-mesa-dev
+      - libfreeimage-dev
+      - libglfw3-dev
+
+- name: Download nvhpc
+  unarchive:
+    src: https://developer.download.nvidia.com/hpc-sdk/24.3/nvhpc_2024_243_Linux_x86_64_cuda_multi.tar.gz
+    dest: /opt/quarantine/software/nvhpc/24.3/src
+    creates: /opt/quarantine/software/nvhpc/24.3/src/install
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Run nvhpc Installer
+  ansible.builtin.shell: NVHPC_SILENT=true NVHPC_INSTALL_DIR=/opt/quarantine/software/nvhpc/24.3/install NVHPC_INSTALL_TYPE=auto /opt/quarantine/software/nvhpc/24.3/src/install
+  args:
+    creates: /opt/quarantine/software/nvhpc/24.3/install/modulefiles
