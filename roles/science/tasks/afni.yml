@@ -4,7 +4,7 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/afni/202312/install
+    - "/opt/quarantine/software/afni/{{ ansible_date_time.date }}/install"
 
 - name: Install AFNI dependencies
   ansible.builtin.apt:
@@ -55,12 +55,12 @@
     dest: /tmp/@update.afni.binaries
 
 - name: Run AFNI Installer
-  shell: tcsh /tmp/@update.afni.binaries -package linux_ubuntu_16_64 -apsearch yes -bindir /opt/quarantine/software/afni/202312/install
+  shell: tcsh /tmp/@update.afni.binaries -package linux_ubuntu_16_64 -apsearch yes -bindir /opt/quarantine/software/afni/{{ ansible_date_time.date }}/install
   args:
-    creates: /opt/quarantine/software/afni/202312/install/afni
+    creates: /opt/quarantine/software/afni/{{ ansible_date_time.date }}/install/afni
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/afni/202312/module
+    dest: /opt/quarantine/software/afni/{{ ansible_date_time.date }}/module
   notify: link modules

@@ -4,27 +4,26 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/conda/202311
-    - /etc/conda
+    - "/opt/quarantine/software/conda/{{ ansible_date_time.date }}"
 
 
 - name: copy python environment file
-  copy: src=files/neuroimaging_python.yml dest=/opt/quarantine/software/conda/202311
+  copy: src=files/neuroimaging_python.yml dest=/opt/quarantine/software/conda/{{ ansible_date_time.date }}
 
 - name: create conda environment
-  shell: micromamba create --quiet --yes -p /opt/quarantine/software/conda/202311/conda-base -f /opt/quarantine/software/conda/202311/neuroimaging_python.yml
+  shell: micromamba create --quiet --yes -p /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base -f /opt/quarantine/software/conda/{{ ansible_date_time.date }}/neuroimaging_python.yml
   args:
-    creates: /opt/quarantine/software/conda/202311/conda-base/bin/python
+    creates: /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base/bin/python
 
 # Copy condarc into environment
 - name: copy condarc
-  copy: src=files/condarc dest=/opt/quarantine/software/conda/202311/conda-base
+  copy: src=files/condarc dest=/opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base
 
 
 - name: Install module
   template:
     src: templates/conda_module.j2
-    dest: /opt/quarantine/software/conda/202311/module
+    dest: /opt/quarantine/software/conda/{{ ansible_date_time.date }}/module
   vars:
     modulename: conda-base
   notify: link modules

@@ -87,9 +87,9 @@
 
 
 - name: Install pyminc (python)
-  shell: micromamba run -r /opt/quarantine/software/conda/202311/conda-base pip install pyminc
+  shell: micromamba run -r /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base pip install pyminc
   args:
-    creates: /opt/quarantine/software/conda/202311/conda-base/lib/python3.11/site-packages/pyminc
+    creates: /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base/lib/python3.11/site-packages/pyminc
   when:
     - '"python" in ansible_run_tags or "all" in ansible_run_tags'
 
@@ -129,9 +129,9 @@
     version: v2.2.30
 
 - name: Install minc2-simple (python)
-  shell: MINC_TOOLKIT=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install micromamba run -r /opt/quarantine/software/conda/202311/conda-base pip install /opt/quarantine/software/minc2-simple/v2.2.30/src/python
+  shell: MINC_TOOLKIT=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install micromamba run -r /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base pip install /opt/quarantine/software/minc2-simple/v2.2.30/src/python
   args:
-    creates: /opt/quarantine/software/conda/202311/conda-base/lib/python3.11/site-packages/minc2_simple
+    creates: /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base/lib/python3.11/site-packages/minc2_simple
   when:
     - '"python" in ansible_run_tags or "all" in ansible_run_tags'
 
