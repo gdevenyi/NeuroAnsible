@@ -1,6 +1,15 @@
 ---
-- name: install miscellaneous apptainer
-  apt: deb={{ item }}
+
+- name: add apptainer ppa
+  command: apt-add-repository -y -n {{ item }}
   with_items:
-    - https://github.com/apptainer/apptainer/releases/download/v1.2.5/apptainer_1.2.5_amd64.deb
-  ignore_errors: true
+    - ppa:apptainer/ppa
+
+- name: Install apptainer dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    state: present
+    autoclean: true
+    autoremove: true
+    pkg:
+      - apptainer
