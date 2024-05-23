@@ -1,6 +1,10 @@
 ---
+
 - hosts: workstations
-  become: yes
+  become: true
   roles:
     - mambaorg.micromamba
     - science
+
+  environment:
+    APPTAINER_TMPDIR: /scratch
