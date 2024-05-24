@@ -15,6 +15,8 @@ variants (Ubuntu, Kubuntu, Lubuntu, etc.)
 
 Prerequiste to use this playbook is installation of ansible.
 
+Total installation size as of 2024-05-24 is approximately 110GB.
+
 ## Software Requirements
 
 This playbook uses [ansible](https://www.ansible.com/) to deploy on the machine
