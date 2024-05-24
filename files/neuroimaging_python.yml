@@ -6,30 +6,53 @@ channels:
 channel_priority: strict
 dependencies:
   - pip
+# Neuroimaging Packages
   - nibabel
   - nipype
   - dipy
   - nitime
   - nilearn
+  - itk
+  - vtk
+  - scikit-image
+  - pillow
+# MEG & EEG
+  - mne
+# Data frames
   - polars
+  - pyreadstat
   - pandas
+  - sklearn-pandas
+  - pandas
+  - xarray
+# Math and learning
   - numpy
   - scipy
   - scikit-learn
-  - scikit-image
+  - statsmodels
+# Plotting
   - matplotlib
   - datalad
   - seaborn
-  - statsmodels
+  - plotly
+  - plotnine
+# Base python and dependencies
   - jupyterlab
   - ipython
   - simpleitk
-  - itk
-  - vtk
   - biopython
   - regex
   - h5py
+# nighres dependencies
+  - jcc
+  - tenacity
+  - retrying
+# brainstat dependencies
+  - pyembree
   - pip:
     - neurosynth
     - neuroquery
     - git+https://github.com/netneurolab/pypyls
+    - antspyx
+    - https://github.com/nighres/nighres/archive/refs/tags/1.5.0.tar.gz
+    - brainstat

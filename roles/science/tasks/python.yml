@@ -6,7 +6,6 @@
   loop:
     - "/opt/quarantine/software/conda/{{ ansible_date_time.date }}"
 
-
 - name: copy python environment file
   copy: src=files/neuroimaging_python.yml dest=/opt/quarantine/software/conda/{{ ansible_date_time.date }}
 
