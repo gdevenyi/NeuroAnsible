@@ -39,5 +39,5 @@
 
 - name: Cleanup downloaded nvhpc source
   ansible.builtin.file:
-    path: /opt/quarantine/software/nvhpc/24.3/src/install
+    path: /opt/quarantine/software/nvhpc/24.3/src
     state: absent
