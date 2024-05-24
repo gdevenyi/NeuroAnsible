@@ -53,3 +53,10 @@ See `ansible-playbook --list-tags deploy.yml` for tags available to limit execut
 
 You can either select specific tags with `--tags` as an option to the playbook call,
 or skip specific tasks with `--skip-tags`
+
+## Using the installed software
+
+All software is installed using the `lmod` module system. Once deployment is complete
+the next time a terminal is opened, the command `module avail` will list the
+software which can be used. Use `module load` to make a specific package available
+in the terminal.
