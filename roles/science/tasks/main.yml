@@ -15,6 +15,6 @@
 - {import_tasks: minc.yml, tags: minc }
 - {import_tasks: cobralab.yml, tags: cobralab }
 - {import_tasks: mri_misc.yml, tags: misc }
-- {import_tasks: mrtrix.yml, tags: python }
+- {import_tasks: mrtrix.yml, tags: mrtrix }
 - {import_tasks: nvidia.yml, tags: nvidia}
 - {import_tasks: resources.yml, tags: resources}
