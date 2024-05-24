@@ -10,10 +10,10 @@ To request support in the use of this deployment software, or request additional
 
 ## Prerequisites
 
-This ansible playbook was developed on Ubuntu 22.04 and likely works on all 22.04
+This ansible playbook was developed on Ubuntu 22.04 and 24.04 and likely works on all
 variants (Ubuntu, Kubuntu, Lubuntu, etc.)
 
-Prerequiste to use this playbook is SSH access to a workstation you wish to configure.
+Prerequiste to use this playbook is installation of ansible.
 
 ## Software Requirements
 
