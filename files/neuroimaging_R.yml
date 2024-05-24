@@ -1,7 +1,17 @@
 name: neuroimaging_R
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+channel_priority: strict
 dependencies:
-  - r-base=4.1.3
-  - rstudio-desktop
+  - r-base~=4.3
+  - r-essentials
+  - r-recommended
+  - r-irkernel
+  - jupyterlab
+  - nb_conda_kernels
+  - radian
   - r-tidyverse
   - r-pak
   - r-readr

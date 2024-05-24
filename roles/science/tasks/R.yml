@@ -4,51 +4,21 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/R/4.1.3
-    - /etc/conda
-
-# Ensure conda config is correct
-- name: copy condarc
-  copy: src=files/condarc dest=/etc/conda/condarc
-
-# Install pipx
-- name: Install pipx
-  ansible.builtin.apt:
-    update_cache: yes
-    state: present
-    autoclean: yes
-    autoremove: yes
-    pkg: pipx
-
-# pipx directory
-- name: ensure /opt/pipx
-  ansible.builtin.file:
-    path: /opt/pipx
-    state: directory
-    mode: 0755
-
-- name: install radian
-  community.general.pipx:
-    name: "{{ item }}"
-    state: present
-  environment:
-    PIPX_HOME: /opt/pipx
-    PIPX_BIN_DIR: /usr/local/bin
-  with_items:
-    - radian
+    - /opt/quarantine/software/R/4.3
+    - /opt/quarantine/software/rstudio/2024.04.1-74/install
 
 - name: copy R environment file
-  copy: src=files/neuroimaging_R.yml dest=/opt/quarantine/software/R/4.1.3/
+  copy: src=files/neuroimaging_R.yml dest=/opt/quarantine/software/R/4.3/
 
 - name: create R environment
-  shell: micromamba create --quiet --yes -p /opt/quarantine/software/R/4.1.3/r-base -f /opt/quarantine/software/R/4.1.3/neuroimaging_R.yml
+  shell: micromamba create --quiet --yes -p /opt/quarantine/software/R/4.3/r-base -f /opt/quarantine/software/R/4.3/neuroimaging_R.yml
   args:
-    creates: /opt/quarantine/software/R/4.1.3/r-base/bin/R
+    creates: /opt/quarantine/software/R/4.3/r-base/bin/R
 
 - name: Install module
   template:
     src: templates/conda_module.j2
-    dest: /opt/quarantine/software/R/4.1.3/module
+    dest: /opt/quarantine/software/R/4.3/module
   vars:
     modulename: r-base
   notify: link modules
@@ -68,6 +38,23 @@
 #     - '"R" in ansible_run_tags or "all" in ansible_run_tags'
 
 - name: Install mni_cortical_statistics (R)
-  shell: micromamba run -r /opt/quarantine/software/R/4.1.3/r-base Rscript --vanilla -e 'pak::pkg_install("BIC-MNI/mni.cortical.statistics")'
+  shell: micromamba run -r /opt/quarantine/software/R/4.3/r-base Rscript --vanilla -e 'pak::pkg_install("BIC-MNI/mni.cortical.statistics")'
   args:
-    creates: /opt/quarantine/software/R/4.1.3/r-base/lib/R/library/mni.cortical.statistics
+    creates: /opt/quarantine/software/R/4.3/r-base/lib/R/library/mni.cortical.statistics
+
+- name: Install rstudio
+  unarchive:
+    src: https://download1.rstudio.org/electron/jammy/amd64/rstudio-2024.04.1-748-amd64-debian.tar.gz
+    dest: /opt/quarantine/software/rstudio/2024.04.1-74/install
+    creates:  /opt/quarantine/software/rstudio/2024.04.1-74/install/b
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/rstudio/2024.04.1-74/module
+  vars:
+    prereqs:
+      - R
+  notify: link modules
