@@ -15,6 +15,10 @@
   args:
     creates: /opt/quarantine/software/R/4.3/r-base/bin/R
 
+# Needed so that adding additional packages work
+- name: copy condarc file
+  copy: src=files/condarc dest=/opt/quarantine/software/R/4.3/r-base
+
 - name: Install module
   template:
     src: templates/conda_module.j2
