@@ -29,27 +29,25 @@ Once ansible is installed, you will need to pull in a external role used by this
 $ ansible-galaxy role install mambaorg.micromamba
 ```
 
-The workstation you wish to setup will need OpenSSH server installed for access:
-```bash
-$ apt install openssh-server -y
-```
-
 ## Use
 
-Add to the `[workstations]` section of the `inventory` file the IP address or Hostname
-of the system you wish to setup, along with `ansible_user=<username>` to specify
-the username which has SSH access to the system. This user must also have `sudo` access.
+Clone a copy of the repository and run the ansible playbook
+
+You must have `sudo` access to make chages to the system.
 
 Now you can setup the system by running the ansible playbook:
 ```bash
-$ ansible-playbook deploy.yml -K -k
+$ ansible-playbook --ask-become-pass deploy.yml
 ```
 
-Ansible will prompt you for a login password (`-k`) and `sudo` password (`-K`).
-If you have setup ssh keys or your user has passwordless sudo you can omit those.
+Ansible will prompt you for a `sudo` password (`--ask-become-pass`).
+If you have passwordless sudo you can omit this.
 
 ## Customize Software
 
 The playbook is customizable with `tags`, by default all tags are executed.
 
 See `ansible-playbook --list-tags deploy.yml` for tags available to limit execution.
+
+You can either select specific tags with `--tags` as an option to the playbook call,
+or skip specific tasks with `--skip-tags`
