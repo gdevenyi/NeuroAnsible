@@ -1,4 +1,5 @@
 ---
+
 - name: Create quarantine paths
   file:
     path: "{{ item }}"
