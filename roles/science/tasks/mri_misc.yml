@@ -1,19 +1,24 @@
 ---
+
 - name: Create MRI Misc directories
   file:
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/itk-snap/4.0.2/install
-    - /opt/quarantine/software/Slicer3D/5.6.0/install
+    - /opt/quarantine/software/itk-snap/4.2.0/install
+    - /opt/quarantine/software/3DSlicer/5.6.2/install
     - /opt/quarantine/software/MRIcron/v1.2.20211006/install
     - /opt/quarantine/software/MRIcroGL/v1.2.20220720/install
-    - /opt/quarantine/software/dcm2niix/v1.0.20230411/install
+    - /opt/quarantine/software/dcm2niix/v1.0.20240202/install
     - /opt/quarantine/software/mi-brain/2020.04.09_r2e0ff5/install
     - /opt/quarantine/software/mango/4.1/install
     - /opt/quarantine/software/connectome-workbench/v1.5.0/install
     - /opt/quarantine/software/dsi-studio/2023.12.06/install
     - /opt/quarantine/software/c3d/1.4.0/install
+    - /opt/quarantine/software/dcm2bids/3.1.1/install
+    - /opt/quarantine/software/bpipe/0.9.12/install
+
+###############################################################################
 
 - name: Install MRI misc dependencies and software
   apt:
@@ -33,35 +38,39 @@
       - libarchive-tools
       - curl
 
+###############################################################################
+
 - name: Install itk-snap
   unarchive:
-    src: https://sourceforge.net/projects/itk-snap/files/itk-snap/4.0.2/itksnap-4.0.2-Linux-gcc64.tar.gz/download
-    dest: /opt/quarantine/software/itk-snap/4.0.2/install
-    creates:  /opt/quarantine/software/itk-snap/4.0.2/install/bin/itksnap
+    src: https://downloads.sourceforge.net/project/itk-snap/itk-snap/4.2.0/itksnap-4.2.0-20240422-Linux-gcc64.tar.gz
+    dest: /opt/quarantine/software/itk-snap/4.2.0/install
+    creates:  /opt/quarantine/software/itk-snap/4.2.0/install/bin/itksnap
     remote_src: yes
     extra_opts: [--strip-components=1]
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/itk-snap/4.0.2/module
+    dest: /opt/quarantine/software/itk-snap/4.2.0/module
   notify: link modules
 
+###############################################################################
 
-- name: Install Slicer3D
+- name: Install 3DSlicer
   unarchive:
-    src: https://slicer-packages.kitware.com/api/v1/item/65632f836865868506020c48/download
-    dest: /opt/quarantine/software/Slicer3D/5.6.0/install
-    creates: /opt/quarantine/software/Slicer3D/5.6.0/install/Slicer
+    src: https://download.slicer.org/bitstream/660f92ed30e435b0e355f1a4
+    dest: /opt/quarantine/software/3DSlicer/5.6.2/install
+    creates: /opt/quarantine/software/3DSlicer/5.6.2/install/Slicer
     remote_src: yes
     extra_opts: [--strip-components=1]
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/Slicer3D/5.6.0/module
+    dest: /opt/quarantine/software/3DSlicer/5.6.2/module
   notify: link modules
 
+###############################################################################
 
 - name: Install MRIcron
   ansible.builtin.shell: |
@@ -79,6 +88,8 @@
     dest: /opt/quarantine/software/MRIcron/v1.2.20211006/module
   notify: link modules
 
+###############################################################################
+
 - name: Install MRIcroGL
   ansible.builtin.shell: |
       curl -s -L -o /tmp/MRIcroGL_linux.zip \
@@ -95,19 +106,22 @@
     dest: /opt/quarantine/software/MRIcroGL/v1.2.20220720/module
   notify: link modules
 
+###############################################################################
+
 - name: Install dcm2niix
   unarchive:
-    src: https://github.com/rordenlab/dcm2niix/releases/download/v1.0.20230411/dcm2niix_lnx.zip
-    dest: /opt/quarantine/software/dcm2niix/v1.0.20230411/install
-    creates:  /opt/quarantine/software/dcm2niix/v1.0.20230411/install/dcm2niix
+    src: https://github.com/rordenlab/dcm2niix/releases/download/v1.0.20240202/dcm2niix_lnx.zip
+    dest: /opt/quarantine/software/dcm2niix/v1.0.20240202/install
+    creates:  /opt/quarantine/software/dcm2niix/v1.0.20240202/install/dcm2niix
     remote_src: yes
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/dcm2niix/v1.0.20230411/module
+    dest: /opt/quarantine/software/dcm2niix/v1.0.20240202/module
   notify: link modules
 
+###############################################################################
 
 - name: Install mi-brain
   unarchive:
@@ -122,6 +136,8 @@
     src: templates/basemodule.j2
     dest: /opt/quarantine/software/mi-brain/2020.04.09_r2e0ff5/module
   notify: link modules
+
+###############################################################################
 
 - name: Install mango
   ansible.builtin.shell: |
@@ -138,6 +154,8 @@
     src: templates/basemodule.j2
     dest: /opt/quarantine/software/mango/4.1/module
   notify: link modules
+
+###############################################################################
 
 - name: Install connectome-workbench
   ansible.builtin.shell: |
@@ -157,6 +175,8 @@
     dest: /opt/quarantine/software/connectome-workbench/v1.5.0/module
   notify: link modules
 
+###############################################################################
+
 - name: Install dsi-studio
   ansible.builtin.shell: |
       curl -s -L -o /tmp/dsi_studio_ubuntu2204.zip \
@@ -173,6 +193,8 @@
     dest: /opt/quarantine/software/dsi-studio/2023.12.06/module
   notify: link modules
 
+###############################################################################
+
 - name: Install mi-brain
   unarchive:
     src: https://sourceforge.net/projects/c3d/files/c3d/Experimental/c3d-1.4.0-Linux-gcc64.tar.gz/download
@@ -185,4 +207,36 @@
   template:
     src: templates/basemodule.j2
     dest: /opt/quarantine/software/c3d/1.4.0/module
+  notify: link modules
+
+###############################################################################
+
+- name: Install dcm2bids
+  unarchive:
+    src: https://github.com/UNFmontreal/Dcm2Bids/releases/download/3.1.1/dcm2bids_debian-based_3.1.1.tar.gz
+    dest: /opt/quarantine/software/dcm2bids/3.1.1/install
+    creates: /opt/quarantine/software/dcm2bids/3.1.1/install/bin
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/dcm2bids/3.1.1/module
+  notify: link modules
+
+###############################################################################
+
+- name: Install bpipe
+  unarchive:
+    src: https://github.com/ssadedin/bpipe/releases/download/0.9.12/bpipe-0.9.12-groovy-3.0.10.tar.gz
+    dest: /opt/quarantine/software/bpipe/0.9.12/install
+    creates: /opt/quarantine/software/bpipe/0.9.12/install/bin/bpipe
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/bpipe/0.9.12/module
   notify: link modules
