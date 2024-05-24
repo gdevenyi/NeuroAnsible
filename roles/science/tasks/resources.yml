@@ -69,8 +69,9 @@
   unarchive:
     src: "{{ item }}"
     dest: /opt/quarantine/resources/cobralab-atlases/brains
-    creates: /opt/quarantine/resources/cobralab-atlases/brains/brains_t1
+    creates: /opt/quarantine/resources/cobralab-atlases/brains/brains_t1/brain1_t1.mnc
     remote_src: yes
+    mode: u=rwX,g=rX,o=rX
   loop:
     - https://github.com/CoBrALab/atlases/releases/download/2.0/brains_t1.tar.bz2
     - https://github.com/CoBrALab/atlases/releases/download/2.0/brains_t2.tar.bz2
