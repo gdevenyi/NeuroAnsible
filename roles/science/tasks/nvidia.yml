@@ -41,3 +41,6 @@
   ansible.builtin.file:
     path: /opt/quarantine/software/nvhpc/24.3/src
     state: absent
+
+- name: copy nvidia module activate
+  copy: src=files/zznvidia_modules.sh dest=/etc/profile.d
