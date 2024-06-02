@@ -38,6 +38,7 @@ dependencies:
   - plotnine
 # Base python and dependencies
   - jupyterlab
+  - ipywidgets
   - ipython
   - simpleitk
   - biopython
