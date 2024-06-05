@@ -13,6 +13,8 @@ To request support in the use of this deployment software, or request additional
 This ansible playbook was developed on Ubuntu 22.04 and 24.04 and likely works on all
 variants (Ubuntu, Kubuntu, Lubuntu, etc.)
 
+This playbook also succcessfully executes on WSL installations on Ubuntu.
+
 Prerequiste to use this playbook is installation of ansible.
 
 Total installation size as of 2024-05-24 is approximately 110GB.
