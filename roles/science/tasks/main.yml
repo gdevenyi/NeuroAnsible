@@ -1,5 +1,11 @@
 ---
 
+- name: Create a scratch directory
+  ansible.builtin.file:
+    path: /scratch
+    state: directory
+    mode: u=rwX,g=rwX,o=rwX
+
 - {import_tasks: modules.yml, tags: modules}
 - {import_tasks: afni.yml, tags: afni}
 - {import_tasks: freesurfer.yml, tags: freesurfer}
