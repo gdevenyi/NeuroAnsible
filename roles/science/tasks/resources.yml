@@ -5,6 +5,15 @@
     path: /opt/quarantine/resources
     state: directory
 
+- name: Install resources install dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    state: present
+    autoclean: true
+    autoremove: true
+    pkg:
+      - unzip
+
 - name: Download and install minc MNI atlases
   include_tasks: resources-atlas-include.yml
   loop:

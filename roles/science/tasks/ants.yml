@@ -6,6 +6,15 @@
   loop:
     - /opt/quarantine/software/ANTs/2.5.2/install
 
+- name: Install ANTs install dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    state: present
+    autoclean: true
+    autoremove: true
+    pkg:
+      - unzip
+
 - name: Install ANTs
   unarchive:
     src: https://github.com/ANTsX/ANTs/releases/download/v2.5.2/ants-2.5.2-ubuntu-22.04-X64-gcc.zip
