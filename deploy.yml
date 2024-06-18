@@ -2,6 +2,7 @@
 
 - hosts: workstations
   become: true
+  force_handlers: true
   roles:
     - mambaorg.micromamba
     - science
