@@ -1,10 +1,10 @@
 ---
-- name: create directory for atlas files
+- name: create directory for atlas files for {{ (item | basename | splitext)[0] }}
   file:
     path: /opt/quarantine/resources/{{ (item | basename | splitext)[0] }}
     state: directory
 
-- name: Download and install atlas file
+- name: Download atlas files for {{ (item | basename | splitext)[0] }}
   unarchive:
     src: "{{ item }}"
     dest: /opt/quarantine/resources/{{ (item | basename | splitext)[0] }}
