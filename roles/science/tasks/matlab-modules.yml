@@ -23,7 +23,7 @@
     dest: /opt/quarantine/software/PLS/6.15/module
   vars:
     prereqs:
-      - matlab
+      - MATLAB
     extra_opts:
       - prepend_path( "MATLABPATH", pathJoin(basepath,"plscmd"))
       - prepend_path( "MATLABPATH", pathJoin(basepath,"plsgui"))
@@ -42,7 +42,7 @@
     dest: /opt/quarantine/software/SPM12/r7771/module
   vars:
     prereqs:
-      - matlab
+      - MATLAB
     extra_opts:
       - prepend_path( "MATLABPATH", pathJoin(basepath,"spm12"))
   notify: link modules
@@ -60,7 +60,7 @@
     dest: /opt/quarantine/software/CAT12/12.8.2/module
   vars:
     prereqs:
-      - matlab
+      - MATLAB
       - SPM12
     extra_opts:
       - prepend_path( "MATLABPATH", pathJoin(basepath,"cat12"))
@@ -87,7 +87,7 @@
     dest: /opt/quarantine/software/BrainNetViewer/1.7/module
   vars:
     prereqs:
-      - matlab
+      - MATLAB
     extra_opts:
       - prepend_path( "MATLABPATH", pathJoin(basepath))
   notify: link modules
