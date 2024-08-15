@@ -218,7 +218,6 @@
     dest: /opt/quarantine/software/dcm2bids/3.1.1/install
     creates: /opt/quarantine/software/dcm2bids/3.1.1/install/bin
     remote_src: yes
-    extra_opts: [--strip-components=1]
 
 - name: Install module
   template:
