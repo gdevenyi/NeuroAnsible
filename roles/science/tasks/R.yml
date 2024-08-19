@@ -1,11 +1,15 @@
 ---
+
 - name: Create directories
   file:
     path: "{{ item }}"
     state: directory
   loop:
     - /opt/quarantine/software/R/4.3
-    - /opt/quarantine/software/rstudio/2024.04.1-74/install
+    - /opt/quarantine/software/rstudio/2024.04.2-764/install
+    - /opt/quarantine/software/RMINC/1.5.3.1/install
+    - /opt/quarantine/software/MRIcrotome/2aed2ff/install
+    - /opt/quarantine/software/mni.cortical.statistics/4bc1388/install
 
 - name: copy R environment file
   copy: src=files/neuroimaging_R.yml dest=/opt/quarantine/software/R/4.3/
@@ -27,37 +31,81 @@
     modulename: r-base
   notify: link modules
 
-# - name: Install RMINC (R)
-#   shell: . /opt/minc/1.9.18/minc-toolkit-config.sh && Rscript --vanilla -e 'remotes::install_github("Mouse-Imaging-Centre/RMINC@*release", upgrade=FALSE)'
-#   args:
-#     creates: /usr/local/lib/R/site-library/RMINC
-#   when:
-#     - '"R" in ansible_run_tags or "all" in ansible_run_tags'
+- name: Install RMINC (R)
+  shell: >
+        LD_LIBRARY_PATH=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install/lib
+        PATH=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install/bin:${PATH}
+        MINC_PATH=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install
+        micromamba run -r /opt/quarantine/software/R/4.3/r-base Rscript --vanilla --verbose
+        -e ' withr::with_libpaths(new = "/opt/quarantine/software/RMINC/1.5.3.1/install", action="prefix", remotes::install_github("Mouse-Imaging-Centre/RMINC@develop", upgrade=FALSE))'
+  args:
+    creates: /opt/quarantine/software/RMINC/1.5.3.1/install/RMINC
+  when:
+    - '"minc" in ansible_run_tags or "all" in ansible_run_tags'
 
-# - name: Install MRIcrotome (R)
-#   shell: Rscript --vanilla -e 'remotes::install_github("Mouse-Imaging-Centre/MRIcrotome", upgrade=FALSE)'
-#   args:
-#     creates: /usr/local/lib/R/site-library/MRIcrotome
-#   when:
-#     - '"R" in ansible_run_tags or "all" in ansible_run_tags'
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/RMINC/1.5.3.1/module
+  vars:
+    prereqs:
+      - R
+    extra_opts:
+      - prepend_path( "R_LIBS", basepath)
+  notify: link modules
+
+- name: Install MRIcrotome (R)
+  shell: >
+        R_LIBS=/opt/quarantine/software/RMINC/1.5.3.1/install
+        micromamba run -r /opt/quarantine/software/R/4.3/r-base
+        Rscript --vanilla --verbose -e 'withr::with_libpaths(new = "/opt/quarantine/software/MRIcrotome/2aed2ff/install", action="prefix", remotes::install_github("Mouse-Imaging-Centre/MRIcrotome@2aed2ff", upgrade=FALSE))'
+  args:
+    creates: /opt/quarantine/software/MRIcrotome/2aed2ff/install/MRIcrotome
+  when:
+    - '"minc" in ansible_run_tags or "all" in ansible_run_tags'
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/MRIcrotome/2aed2ff/module
+  vars:
+    prereqs:
+      - R
+    extra_opts:
+      - prepend_path( "R_LIBS", basepath)
+  notify: link modules
 
 - name: Install mni_cortical_statistics (R)
-  shell: micromamba run -r /opt/quarantine/software/R/4.3/r-base Rscript --vanilla -e 'pak::pkg_install("BIC-MNI/mni.cortical.statistics")'
+  shell: >
+        micromamba run -r /opt/quarantine/software/R/4.3/r-base
+        Rscript --vanilla --verbose -e 'withr::with_libpaths(new = "/opt/quarantine/software/mni.cortical.statistics/4bc1388/install", action="prefix", remotes::install_github("BIC-MNI/mni.cortical.statistics@4bc1388", upgrade=FALSE))'
   args:
-    creates: /opt/quarantine/software/R/4.3/r-base/lib/R/library/mni.cortical.statistics
+    creates: /opt/quarantine/software/mni.cortical.statistics/4bc1388/install/mni.cortical.statistics
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/mni.cortical.statistics/4bc1388/module
+  vars:
+    prereqs:
+      - R
+    extra_opts:
+      - prepend_path( "R_LIBS", basepath)
+  notify: link modules
+
 
 - name: Install rstudio
   unarchive:
-    src: https://download1.rstudio.org/electron/jammy/amd64/rstudio-2024.04.1-748-amd64-debian.tar.gz
-    dest: /opt/quarantine/software/rstudio/2024.04.1-74/install
-    creates:  /opt/quarantine/software/rstudio/2024.04.1-74/install/b
+    src: https://download1.rstudio.org/electron/jammy/amd64/rstudio-2024.04.2-764-amd64-debian.tar.gz
+    dest: /opt/quarantine/software/rstudio/2024.04.2-764/install
+    creates:  /opt/quarantine/software/rstudio/2024.04.2-764/install/rstudio
     remote_src: yes
     extra_opts: [--strip-components=1]
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/rstudio/2024.04.1-74/module
+    dest: /opt/quarantine/software/rstudio/2024.04.2-764/module
   vars:
     prereqs:
       - R
