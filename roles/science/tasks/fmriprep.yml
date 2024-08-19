@@ -4,19 +4,19 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/fmriprep/23.2.2/install
+    - /opt/quarantine/software/fmriprep/24.0.1/install
     - /opt/quarantine/software/fmriprep/20.2.7/install
 
 
 - name: Build fmriprep singularity container
-  command: apptainer build /opt/quarantine/software/fmriprep/23.2.2/install/fmriprep docker://nipreps/fmriprep:23.2.2
+  command: apptainer build /opt/quarantine/software/fmriprep/24.0.1/install/fmriprep docker://nipreps/fmriprep:24.0.1
   args:
-    creates: /opt/quarantine/software/fmriprep/23.2.2/install/fmriprep
+    creates: /opt/quarantine/software/fmriprep/24.0.1/install/fmriprep
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/fmriprep/23.2.2/module
+    dest: /opt/quarantine/software/fmriprep/24.0.1/module
   notify: link modules
 
 - name: Build fmriprep singularity container
