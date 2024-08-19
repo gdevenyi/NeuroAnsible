@@ -1,0 +1,32 @@
+---
+- name: Create MATLAB Runtime directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/matlab-runtime/R2023b-23.2/install
+    - /opt/quarantine/software/matlab-runtime/R2023b-23.2/src
+
+- name: Download MATLAB Runtime R2023b-23.2
+  unarchive:
+    src: https://ssd.mathworks.com/supportfiles/downloads/R2023b/Release/5/deployment_files/installer/complete/glnxa64/MATLAB_Runtime_R2023b_Update_5_glnxa64.zip
+    dest: /opt/quarantine/software/matlab-runtime/R2023b-23.2/src
+    creates: /opt/quarantine/software/matlab-runtime/R2023b-23.2/src/install
+    remote_src: yes
+
+- name: Run installer
+  ansible.builtin.command:
+    cmd: /opt/quarantine/software/matlab-runtime/R2023b-23.2/src/install -agreeToLicense yes -destinationFolder /opt/quarantine/software/matlab-runtime/R2023b-23.2/install
+    creates: /opt/quarantine/software/matlab-runtime/R2023b-23.2/install/R2023b
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/matlab-runtime/R2023b-23.2/module
+  vars:
+    extra_opts:
+      - prepend_path("LD_LIBRARY_PATH", pathJoin(basepath, "R2023b/runtime/glnxa64"))
+      - prepend_path("LD_LIBRARY_PATH", pathJoin(basepath, "R2023b/bin/glnxa64"))
+      - prepend_path("LD_LIBRARY_PATH", pathJoin(basepath, "R2023b/sys/os/glnxa64"))
+      - prepend_path("LD_LIBRARY_PATH", pathJoin(basepath, "R2023b/extern/bin/glnxa64"))
+  notify: link modules
