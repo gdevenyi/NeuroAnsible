@@ -4,7 +4,7 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/ANTs/2.5.2/install
+    - /opt/quarantine/software/ANTs/2.5.3/install
 
 - name: Install ANTs install dependencies
   ansible.builtin.apt:
@@ -17,18 +17,18 @@
 
 - name: Install ANTs
   unarchive:
-    src: https://github.com/ANTsX/ANTs/releases/download/v2.5.2/ants-2.5.2-ubuntu-22.04-X64-gcc.zip
-    dest: /opt/quarantine/software/ANTs/2.5.2/install
-    creates: /opt/quarantine/software/ANTs/2.5.2/install/bin/antsRegistration
+    src: https://github.com/ANTsX/ANTs/releases/download/v2.5.3/ants-2.5.3-ubuntu-24.04-X64-gcc.zip
+    dest: /opt/quarantine/software/ANTs/2.5.3/install
+    creates: /opt/quarantine/software/ANTs/2.5.3/install/bin/antsRegistration
     remote_src: yes
 
 - name: Move ANTs install files
-  shell: mv /opt/quarantine/software/ANTs/2.5.2/install/ants-2.5.2/* /opt/quarantine/software/ANTs/2.5.2/install
+  shell: mv /opt/quarantine/software/ANTs/2.5.3/install/ants-2.5.3/* /opt/quarantine/software/ANTs/2.5.3/install
   args:
-    creates: /opt/quarantine/software/ANTs/2.5.2/install/bin/antsRegistration
+    creates: /opt/quarantine/software/ANTs/2.5.3/install/bin/antsRegistration
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/ANTs/2.5.2/module
+    dest: /opt/quarantine/software/ANTs/2.5.3/module
   notify: link modules
