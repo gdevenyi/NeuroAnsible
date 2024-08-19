@@ -4,7 +4,7 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/cpac/0.5.1/install/bin
+    - /opt/quarantine/software/cpac/1.8.7/install/bin
 
 # Install pipx
 - name: Install pipx
@@ -20,13 +20,13 @@
     name: "{{ item }}"
     state: present
   environment:
-    PIPX_HOME: /opt/quarantine/software/cpac/0.5.1/install
-    PIPX_BIN_DIR: /opt/quarantine/software/cpac/0.5.1/install/bin
+    PIPX_HOME: /opt/quarantine/software/cpac/1.8.7/install
+    PIPX_BIN_DIR: /opt/quarantine/software/cpac/1.8.7/install/bin
   with_items:
-    - cpac==0.5.1
+    - cpac==1.8.7
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/cpac/0.5.1/module
+    dest: /opt/quarantine/software/cpac/1.8.7/module
   notify: link modules
