@@ -15,9 +15,11 @@ variants (Ubuntu, Kubuntu, Lubuntu, etc.)
 
 This playbook also succcessfully executes on WSL installations on Ubuntu.
 
-Prerequiste to use this playbook is installation of ansible.
+Prerequistes to use this playbook is installation of ansible.
 
 Total installation size as of 2024-05-24 is approximately 110GB.
+
+This can be significantly reduced by skipping the installation of the resources with `--skip-tags resources`
 
 ## Software Requirements
 
@@ -37,9 +39,10 @@ $ ansible-galaxy role install mambaorg.micromamba
 
 Clone a copy of the repository and run the ansible playbook
 
-You must have `sudo` access to make chages to the system.
+You must have `sudo` access to make changes to the system.
 
 Now you can setup the system by running the ansible playbook:
+
 ```bash
 $ ansible-playbook --ask-become-pass deploy.yml
 ```
@@ -55,6 +58,12 @@ See `ansible-playbook --list-tags deploy.yml` for tags available to limit execut
 
 You can either select specific tags with `--tags` as an option to the playbook call,
 or skip specific tasks with `--skip-tags`
+
+MATLAB users may be interested in the optional `matlab` tag, which
+provides a number of MATLAB toolboxes.
+
+NVidia users should include the `nvidia` tag to install the `nvhpc` packages
+to provide all currently supported versions of cuda as modules.
 
 ## Using the installed software
 
