@@ -13,6 +13,7 @@
     - /opt/quarantine/software/mi-brain/2020.04.09_r2e0ff5/install
     - /opt/quarantine/software/mango/4.1/install
     - /opt/quarantine/software/connectome-workbench/v1.5.0/install
+    - /opt/quarantine/software/connectome-workbench/v2.0.0/install
     - /opt/quarantine/software/dsi-studio/2023.12.06/install
     - /opt/quarantine/software/c3d/1.4.0/install
     - /opt/quarantine/software/dcm2bids/3.1.1/install
@@ -174,6 +175,26 @@
   template:
     src: templates/basemodule.j2
     dest: /opt/quarantine/software/connectome-workbench/v1.5.0/module
+  notify: link modules
+
+###############################################################################
+
+- name: Install connectome-workbench
+  ansible.builtin.shell: |
+      curl -s -L -o /tmp/workbench-linux64-v2.0.0.zip \
+      https://humanconnectome.org/storage/app/media/workbench/workbench-linux64-v2.0.0.zip
+      bsdtar xzvf /tmp/workbench-linux64-v2.0.0.zip --strip-components 1 -C /opt/quarantine/software/connectome-workbench/v2.0.0/install
+      rm -f /tmp/workbench-linux64-v2.0.0.zip
+      ln -srf /opt/quarantine/software/connectome-workbench/v2.0.0/install/bin_linux64 /opt/quarantine/software/connectome-workbench/v2.0.0/install/bin
+      chmod u=rwX,g=rX,o=rX -R /opt/quarantine/software/connectome-workbench/v1.5.0/install
+  args:
+    creates: /opt/quarantine/software/connectome-workbench/v2.0.0/install/bin
+    executable: /bin/bash
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/connectome-workbench/v2.0.0/module
   notify: link modules
 
 ###############################################################################
