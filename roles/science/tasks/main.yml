@@ -20,6 +20,7 @@
 - {import_tasks: cpac.yml, tags: cpac}
 - {import_tasks: civet.yml, tags: civet}
 - {import_tasks: python.yml, tags: python }
+- {import_tasks: qbatch.yml, tags: [python,qbatch] }
 - {import_tasks: minc.yml, tags: minc }
 - {import_tasks: R.yml, tags: R }
 - {import_tasks: cobralab.yml, tags: cobralab }

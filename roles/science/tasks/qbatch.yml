@@ -20,6 +20,8 @@
   community.general.pipx:
     name: "{{ item }}"
     state: present
+    inject_packages: "setuptools"
+    include_injected: true
   environment:
     PIPX_HOME: /opt/pipx
     PIPX_BIN_DIR: /usr/local/bin
