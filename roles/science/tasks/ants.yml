@@ -17,7 +17,7 @@
 
 - name: Install ANTs
   unarchive:
-    src: https://github.com/ANTsX/ANTs/releases/download/v2.5.3/ants-2.5.3-ubuntu-24.04-X64-gcc.zip
+    src: "https://github.com/ANTsX/ANTs/releases/download/v2.5.3/ants-2.5.3-ubuntu-{{ ansible_distribution_version }}-X64-gcc.zip"
     dest: /opt/quarantine/software/ANTs/2.5.3/install
     creates: /opt/quarantine/software/ANTs/2.5.3/install/bin/antsRegistration
     remote_src: yes
