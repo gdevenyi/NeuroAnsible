@@ -49,10 +49,15 @@
     - "http://packages.bic.mni.mcgill.ca/minc-toolkit/Debian/bic-mni-models-0.1.1-20120421.deb"
 
 - name: Unpack minc-toolkit-v2 and delete unneeded ANTs tools
-  shell: dpkg -x minc-toolkit-1.9.18-20220625-Ubuntu_20.04-x86_64.deb /tmp/minctemp && mv /tmp/minctemp/opt/minc/1.9.18/* ../install && rm -f ../install/bin/*ants* ../install/bin/*ANTS* ../install/bin/Image* && rm -rf /tmp/minctmp
+  shell: >
+      dpkg -x minc-toolkit-1.9.18-20220625-Ubuntu_20.04-x86_64.deb /tmp/minctemp
+      && mv /tmp/minctemp/opt/minc/1.9.18/* ../install
+      && rm -f ../install/bin/ants* ../install/bin/ANTS* ../install/bin/{AddNoiseToImage,Atropos,AverageAffineTransform,AverageAffineTransformNoRigid,AverageImages,AverageTensorImages,ClusterImageStatistics,compareTwoTransforms,ComposeMultiTransform,CompositeTransformUtil,ConvertImage,ConvertImagePixelType,ConvertInputImagePixelTypeToFloat,ConvertScalarImageToRGB,ConvertToJpg,ConvertTransformFile,CopyImageHeaderInformation,CreateDisplacementField,CreateDTICohort,CreateImage,CreateJacobianDeterminantImage,CreateTiledMosaic,CreateWarpedGridImage,DenoiseImage,DeNrrd,ExtractRegionFromImage,ExtractRegionFromImageByMask,ExtractSliceFromImage,FitBSplineToPoints,GetConnectedComponentsFeatureImages,ImageCompare,ImageIntensityStatistics,ImageMath,ImageSetStatistics,iMath,KellyKapowski,KellySlater,LabelClustersUniquely,LabelGeometryMeasures,LabelOverlapMeasures,LaplacianThickness,LesionFilling,MeasureImageSimilarity,MeasureMinMaxMean,MemoryTest,MultiplyImages,N3BiasFieldCorrection,N4BiasFieldCorrection,NonLocalSuperResolution,PasteImageIntoImage,PermuteFlipImageOrientationAxes,PrintHeader,RebaseTensorImage,ReorientTensorImage,ResampleImage,ResampleImageBySpacing,ResetDirection,sccan,SetDirectionByMatrix,SetOrigin,SetSpacing,simpleSynRegistration,SimulateDisplacementField,SmoothDisplacementField,SmoothImage,StackSlices,SuperResolution,SurfaceBasedSmoothing,SurfaceCurvature,TextureCooccurrenceFeatures,TextureRunLengthFeatures,ThresholdImage,TileImages,TimeSCCAN,waitForPBSQJobs.pl,waitForSGEQJobs.pl,waitForSlurmJobs.pl,waitForXGridJobs.pl,WarpImageMultiTransform,WarpTensorImageMultiTransform,WarpTimeSeriesImageMultiTransform}
+      && rm -rf /tmp/minctmp
   args:
     chdir: /opt/quarantine/software/minc-toolkit-v2/1.9.18/src
     creates: /opt/quarantine/software/minc-toolkit-v2/1.9.18/install/bin/mincinfo
+    executable: /bin/bash
 
 - name: Unpack beast-library-1.1
   shell: dpkg -x beast-library-1.1.0-20121212.deb /tmp/minctemp && mv /tmp/minctemp/opt/minc/share/* ../install/share && rm -rf /tmp/minctemp
