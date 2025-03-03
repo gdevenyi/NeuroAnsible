@@ -2,7 +2,6 @@ name: neuroimaging_R
 channels:
   - conda-forge
   - bioconda
-  - defaults
 channel_priority: strict
 dependencies:
   - r-base~=4.3
@@ -17,6 +16,8 @@ dependencies:
   - r-readr
   - r-lme4
   - r-lmertest
+  - r-summarytools
+  - r-effects
   - bioconductor-annotate
   - bioconductor-AnnotationDbi
   - bioconductor-biocviews
