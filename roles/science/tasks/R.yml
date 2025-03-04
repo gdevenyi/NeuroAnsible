@@ -6,7 +6,7 @@
     state: directory
   loop:
     - /opt/quarantine/software/R/4.3
-    - /opt/quarantine/software/rstudio/2024.09.0-368/install
+    - /opt/quarantine/software/rstudio/2024.12.1-563/install
     - /opt/quarantine/software/RMINC/1.5.3.1/install
     - /opt/quarantine/software/MRIcrotome/2aed2ff/install
     - /opt/quarantine/software/mni.cortical.statistics/4bc1388/install
@@ -96,16 +96,16 @@
 
 - name: Install rstudio
   unarchive:
-    src: "https://s3.amazonaws.com/rstudio-ide-build/electron/jammy/amd64/rstudio-2024.09.0-368-amd64-debian.tar.gz"
-    dest: /opt/quarantine/software/rstudio/2024.09.0-368/install
-    creates:  /opt/quarantine/software/rstudio/2024.09.0-368/install/rstudio
+    src: "https://download1.rstudio.org/electron/jammy/amd64/rstudio-2024.12.1-563-amd64-debian.tar.gz"
+    dest: /opt/quarantine/software/rstudio/2024.12.1-563/install
+    creates:  /opt/quarantine/software/rstudio/2024.12.1-563/install/rstudio
     remote_src: yes
     extra_opts: [--strip-components=1]
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/rstudio/2024.09.0-368/module
+    dest: /opt/quarantine/software/rstudio/2024.12.1-563/module
   vars:
     prereqs:
       - R
