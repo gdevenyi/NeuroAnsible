@@ -90,14 +90,6 @@
       - prepend_path( "PERL5LIB",       pathJoin(basepath,"perl"))
   notify: link modules
 
-
-- name: Install pyminc (python)
-  shell: micromamba run -r /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base pip install pyminc
-  args:
-    creates: /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base/lib/python3.11/site-packages/pyminc
-  when:
-    - '"python" in ansible_run_tags or "all" in ansible_run_tags'
-
 - name: clone minc-stuffs
   git:
     repo: https://github.com/Mouse-Imaging-Centre/minc-stuffs.git
