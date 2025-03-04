@@ -4,15 +4,15 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/fastsurfer/2.2.0/install
+    - "/opt/quarantine/software/fastsurfer/{{ fastsurfer_version }}/install"
 
 - name: Build fastsurfer singularity container
-  shell: apptainer build /opt/quarantine/software/fastsurfer/2.2.0/install/fastsurfer docker://deepmi/fastsurfer:gpu-v2.2.0
+  shell: "apptainer build /opt/quarantine/software/fastsurfer/{{ fastsurfer_version }}/install/fastsurfer docker://deepmi/fastsurfer:cuda-v{{ fastsurfer_version }}"
   args:
-    creates: /opt/quarantine/software/fastsurfer/2.2.0/install/fastsurfer
+    creates: /opt/quarantine/software/fastsurfer/{{ fastsurfer_version }}/install/fastsurfer
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/fastsurfer/2.2.0/module
+    dest: /opt/quarantine/software/fastsurfer/{{ fastsurfer_version }}/module
   notify: link modules
