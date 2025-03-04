@@ -31,7 +31,7 @@
   vars:
     packages:
       - libqt5pas1
-      - libqt6charts6-dev
+      - libqt6charts6
       - libpulse-dev
       - libnss3
       - libglu1-mesa
