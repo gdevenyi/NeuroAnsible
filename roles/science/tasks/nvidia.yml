@@ -5,7 +5,6 @@
     state: directory
   loop:
     - /opt/quarantine/software/nvhpc/24.3/src
-    - /opt/quarantine/software/cuda/12.3.1/src
 
 - name: Install nvidia development dependencies
   ansible.builtin.apt:
