@@ -1,27 +1,27 @@
 ---
-- name: Create ANTs directories
+- name: Create FSL directories
   file:
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/fsl/6.0.7.13/install
-    - /opt/quarantine/software/fsl/6.0.7.13/src
+    - "/opt/quarantine/software/fsl/{{ fsl_version }}/install"
+    - "/opt/quarantine/software/fsl/{{ fsl_version }}/src"
 
 - name: download fsl
   get_url:
     url: https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py
 
-    dest: /opt/quarantine/software/fsl/6.0.7.13/src/fslinstaller.py
+    dest: "/opt/quarantine/software/fsl/{{ fsl_version }}/src/fslinstaller.py"
 
 - name: install fsl
-  shell: python /opt/quarantine/software/fsl/6.0.7.13/src/fslinstaller.py --dest /opt/quarantine/software/fsl/6.0.7.13/install --fslversion 6.0.7.13 --no_env --overwrite
+  shell: "python /opt/quarantine/software/fsl/{{ fsl_version }}/src/fslinstaller.py --dest /opt/quarantine/software/fsl/{{ fsl_version }}/install --fslversion {{ fsl_version }} --no_env --overwrite"
   args:
-    creates: /opt/quarantine/software/fsl/6.0.7.13/install/LICENSE.txt
+    creates: "/opt/quarantine/software/fsl/{{ fsl_version }}/install/LICENCE.FSL"
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/fsl/6.0.7.13/module
+    dest: "/opt/quarantine/software/fsl/{{ fsl_version }}/module"
   vars:
     extra_opts:
       - setenv("FSLDIR", basepath)

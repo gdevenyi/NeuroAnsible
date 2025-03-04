@@ -4,7 +4,8 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - "/opt/quarantine/software/afni/{{ ansible_date_time.date }}/install"
+    - "/opt/quarantine/software/afni/{{ afni_version }}/install"
+    - "/opt/quarantine/software/afni/{{ afni_version }}/src"
 
 - name: Install AFNI dependencies
   ansible.builtin.apt:
@@ -41,26 +42,26 @@
       - libnode-dev
       - libudunits2-dev
 
-# Fix AFNI being built against a different version of gsl
-# https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu22.html#id4
-- name: Link GSL library for AFNI to work
-  file:
-    src: /usr/lib/x86_64-linux-gnu/libgsl.so.27
-    dest: /usr/lib/x86_64-linux-gnu/libgsl.so.19
-    state: link
+# # Fix AFNI being built against a different version of gsl
+# # https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/install_instructs/steps_linux_ubuntu22.html#id4
+# - name: Link GSL library for AFNI to work
+#   file:
+#     src: /usr/lib/x86_64-linux-gnu/libgsl.so.27
+#     dest: /usr/lib/x86_64-linux-gnu/libgsl.so.19
+#     state: link
 
 - name: Download AFNI installer
   get_url:
     url: https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
-    dest: /tmp/@update.afni.binaries
+    dest: "/opt/quarantine/software/afni/{{ afni_version }}/src"
 
 - name: Run AFNI Installer
-  shell: tcsh /tmp/@update.afni.binaries -package linux_ubuntu_16_64 -apsearch yes -bindir /opt/quarantine/software/afni/{{ ansible_date_time.date }}/install
+  shell: "tcsh /opt/quarantine/software/afni/{{ afni_version }}/src/@update.afni.binaries -package linux_ubuntu_{{ ansible_distribution_major_version }}_64 -apsearch yes -bindir /opt/quarantine/software/afni/{{ afni_version }}/install"
   args:
-    creates: /opt/quarantine/software/afni/{{ ansible_date_time.date }}/install/afni
+    creates: /opt/quarantine/software/afni/{{ afni_version }}/install/afni
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/afni/{{ ansible_date_time.date }}/module
+    dest: /opt/quarantine/software/afni/{{ afni_version }}/module
   notify: link modules
