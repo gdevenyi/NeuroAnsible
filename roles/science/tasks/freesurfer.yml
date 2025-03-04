@@ -4,21 +4,21 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/freesurfer/7.4.1
-    - /opt/quarantine/software/freesurfer/7.4.1/install
+    - "/opt/quarantine/software/freesurfer/{{ freesurfer_version }}"
+    - "/opt/quarantine/software/freesurfer/{{ freesurfer_version }}/install"
 
-- name: install freesurfer 7.4.1
+- name: install freesurfer
   unarchive:
-    src: https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/7.4.1/freesurfer-linux-ubuntu22_amd64-7.4.1.tar.gz
-    dest: /opt/quarantine/software/freesurfer/7.4.1/install
-    creates: /opt/quarantine/software/freesurfer/7.4.1/install/SetUpFreeSurfer.sh
+    src: "https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/7.4.1/freesurfer-linux-ubuntu22_amd64-7.4.1.tar.gz"
+    dest: "/opt/quarantine/software/freesurfer/{{ freesurfer_version }}/install"
+    creates: "/opt/quarantine/software/freesurfer/{{ freesurfer_version }}/install/SetUpFreeSurfer.sh"
     remote_src: yes
     extra_opts: [--strip-components=2]
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/freesurfer/7.4.1/module
+    dest: "/opt/quarantine/software/freesurfer/{{ freesurfer_version }}/module"
   vars:
     extra_opts:
       - conflict("minc-toolkit-v2")
@@ -46,5 +46,5 @@
 - name: install freesurfer license
   ansible.builtin.copy:
     src: files/license.txt
-    dest: /opt/quarantine/software/freesurfer/7.4.1/install/license.txt
+    dest: "/opt/quarantine/software/freesurfer/{{ freesurfer_version }}1/install/license.txt"
   ignore_errors: true
