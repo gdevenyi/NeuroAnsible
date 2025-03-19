@@ -13,3 +13,8 @@
     autoremove: true
     pkg:
       - apptainer
+
+# Apptainer has messed up their ubuntu ppa, need to manually install the new version for now
+- name: install apptainer release deb
+  apt: deb=https://github.com/apptainer/apptainer/releases/download/v1.3.6/apptainer_1.3.6_amd64.deb
+  ignore_errors: yes
