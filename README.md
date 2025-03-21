@@ -56,14 +56,15 @@ The playbook is customizable with `tags`, by default all tags are executed.
 
 See `ansible-playbook --list-tags deploy.yml` for tags available to limit execution.
 
-You can either select specific tags with `--tags` as an option to the playbook call,
-or skip specific tasks with `--skip-tags`
+You can skip specific tasks with `--skip-tags` and a comma-separated list as an option to the playbook call to customize your installation.
 
-MATLAB users may be interested in the optional `matlab` tag, which
+You can also select optional tags to the playbook call (with `--tags` and a comma-separated list):
+- MATLAB users may be interested in the optional `matlab` tag, which
 provides a number of MATLAB toolboxes.
-
-NVidia users should include the `nvidia` tag to install the `nvhpc` packages
+- NVidia users should include the `nvidia` tag to install the `nvhpc` packages
 to provide all currently supported versions of cuda as modules.
+
+Note: When using --tags also include tag 'all' so the playbook executes the micromamba role.
 
 ## Using the installed software
 
