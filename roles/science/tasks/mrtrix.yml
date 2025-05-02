@@ -32,7 +32,7 @@
   ansible.builtin.git:
     repo: https://github.com/MRtrix3/mrtrix3
     dest: /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}/install
-    version: {{ mrtrix3_version }}
+    version: "{{ mrtrix3_version }}"
 
 - name: Build mrtrix3
   shell: ./configure && ./build
