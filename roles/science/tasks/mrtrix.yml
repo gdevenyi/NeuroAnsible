@@ -1,4 +1,14 @@
 ---
+
+- name: Create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - /opt/quarantine/software/mrtrix3/3.0.4
+    - /opt/quarantine/software/mrtrix3tissue/5.2.9
+
+
 - name: Install mtrix3 dependencies
   ansible.builtin.apt:
     update_cache: true
@@ -15,15 +25,6 @@
       - libfftw3-dev
       - libtiff5-dev
       - libpng-dev
-
-
-- name: Create directories
-  file:
-    path: "{{ item }}"
-    state: directory
-  loop:
-    - /opt/quarantine/software/mrtrix3/3.0.4
-    - /opt/quarantine/software/mrtrix3tissue/5.2.9
 
 
 - name: Git checkout mrtrix3
