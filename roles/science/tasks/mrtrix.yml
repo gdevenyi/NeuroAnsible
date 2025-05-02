@@ -4,7 +4,7 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/mrtrix3/3.0.4
+    - /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}
     - /opt/quarantine/software/mrtrix3tissue/5.2.9
 
 
@@ -31,19 +31,19 @@
 - name: Git checkout mrtrix3
   ansible.builtin.git:
     repo: https://github.com/MRtrix3/mrtrix3
-    dest: /opt/quarantine/software/mrtrix3/3.0.4/install
-    version: 3.0.4
+    dest: /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}/install
+    version: {{ mrtrix3_version }}
 
 - name: Build mrtrix3
   shell: ./configure && ./build
   args:
-    creates: /opt/quarantine/software/mrtrix3/3.0.4/install/bin/mrview
-    chdir: /opt/quarantine/software/mrtrix3/3.0.4/install
+    creates: /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}/install/bin/mrview
+    chdir: /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}/install
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/mrtrix3/3.0.4/module
+    dest: /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}/module
   notify: link modules
 
 
