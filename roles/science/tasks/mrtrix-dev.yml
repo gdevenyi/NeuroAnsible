@@ -14,6 +14,7 @@
     autoremove: true
     pkg:
       - python3
+      - python-is-python3
       - libeigen3-dev
       - zlib1g-dev
       - libqt5opengl5-dev
@@ -22,6 +23,8 @@
       - libfftw3-dev
       - libtiff5-dev
       - libpng-dev
+      - git
+      - g++
 
 - name: Git checkout mrtrix3-dev
   ansible.builtin.git:
