@@ -17,5 +17,8 @@ freesurfer_version: 7.4.1
 # https://github.com/MRtrix3/mrtrix3/releases
 mrtrix3_version: 3.0.5
 
+# https://github.com/MRtrix3/mrtrix3.git . Compile latest commit in main
+mrtrix3_dev_version: "dev"
+
 # minc-toolkit-extras
 minc_toolkit_extras_version : "{{ (lookup('ansible.builtin.url', 'https://api.github.com/repos/CoBrALab/minc-toolkit-extras/commits/HEAD', wantlist=True)[0] | from_json).commit.committer.date | regex_replace('T.*', '') | regex_replace('-','') }}"
