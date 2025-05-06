@@ -8,7 +8,7 @@
     - /opt/quarantine/software/mrtrix3tissue/5.2.9
 
 
-- name: Install mtrix3 dependencies
+- name: Install mrtrix3 dependencies
   ansible.builtin.apt:
     update_cache: true
     state: present
