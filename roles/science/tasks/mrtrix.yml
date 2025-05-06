@@ -4,23 +4,11 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/mrtrix3/3.0.4
+    - /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}
     - /opt/quarantine/software/mrtrix3tissue/5.2.9
 
-- name: install mrtrix3
-  shell: micromamba create --quiet --yes -c mrtrix3 -c conda-forge -p /opt/quarantine/software/mrtrix3/3.0.4/mrtrix3 mrtrix3=3.0.4
-  args:
-    creates: /opt/quarantine/software/mrtrix3/3.0.4/mrtrix3/bin/mrcalc
 
-- name: Install module
-  template:
-    src: templates/conda_module.j2
-    dest: /opt/quarantine/software/mrtrix3/3.0.4/module
-  vars:
-    modulename: mrtrix3
-  notify: link modules
-
-- name: Install mtrix3tissue dependencies
+- name: Install mrtrix3 dependencies
   ansible.builtin.apt:
     update_cache: true
     state: present
@@ -28,6 +16,7 @@
     autoremove: true
     pkg:
       - python3
+      - python-is-python3
       - libeigen3-dev
       - zlib1g-dev
       - libqt5opengl5-dev
@@ -36,6 +25,27 @@
       - libfftw3-dev
       - libtiff5-dev
       - libpng-dev
+      - git
+      - g++
+
+- name: Git checkout mrtrix3
+  ansible.builtin.git:
+    repo: https://github.com/MRtrix3/mrtrix3
+    dest: /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}/install
+    version: "{{ mrtrix3_version }}"
+
+- name: Build mrtrix3
+  shell: ./configure && ./build
+  args:
+    creates: /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}/install/bin/mrview
+    chdir: /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}/install
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: /opt/quarantine/software/mrtrix3/{{ mrtrix3_version }}/module
+  notify: link modules
+
 
 - name: Git checkout mrtrix3tissue
   ansible.builtin.git:
