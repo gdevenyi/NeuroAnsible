@@ -1,6 +1,6 @@
 ---
 # https://github.com/ANTsX/ANTs/releases
-ants_version: 2.5.4
+ants_version: 2.6.2
 
 # Automatic lookup online
 afni_version: "{{ lookup('ansible.builtin.url', 'https://afni.nimh.nih.gov/pub/dist/AFNI.version', wantlist=True)[0] | regex_replace('AFNI_', '')  }}"
