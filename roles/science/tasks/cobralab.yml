@@ -4,7 +4,7 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/minc-toolkit-extras/20231023
+    - /opt/quarantine/software/minc-toolkit-extras/{{ minc_toolkit_extras_version }}
     - /opt/quarantine/software/iterativeN3/20230821
     - /opt/quarantine/software/iterativeN4_multispectral/20210503
     - /opt/quarantine/software/minc-bpipe-library/20230721
@@ -13,13 +13,12 @@
 - name: clone minc-toolkit-extras
   ansible.builtin.git:
     repo: https://github.com/CoBrALab/minc-toolkit-extras.git
-    dest: /opt/quarantine/software/minc-toolkit-extras/20231023/install
-    version: 7016282fdbd3f7b54c125c4bc6b8750ba4d2cc8b
+    dest: /opt/quarantine/software/minc-toolkit-extras/{{ minc_toolkit_extras_version }}/install
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/minc-toolkit-extras/20231023/module
+    dest: /opt/quarantine/software/minc-toolkit-extras/{{ minc_toolkit_extras_version }}/module
   vars:
     prereqs:
       - minc-toolkit-v2

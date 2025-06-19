@@ -1,6 +1,6 @@
 ---
 # https://github.com/ANTsX/ANTs/releases
-ants_version: 2.5.4
+ants_version: 2.6.2
 
 # Automatic lookup online
 afni_version: "{{ lookup('ansible.builtin.url', 'https://afni.nimh.nih.gov/pub/dist/AFNI.version', wantlist=True)[0] | regex_replace('AFNI_', '')  }}"
@@ -14,5 +14,11 @@ fsl_version: 6.0.7.13
 # https://surfer.nmr.mgh.harvard.edu/fswiki/rel7downloads
 freesurfer_version: 7.4.1
 
-# https://github.com/MRtrix3/mrtrix3.git . This module will try to compile latest commit in main
+# https://github.com/MRtrix3/mrtrix3/releases
+mrtrix3_version: 3.0.5
+
+# https://github.com/MRtrix3/mrtrix3.git . This module compiles latest mrtrix commit in main
 mrtrix3_dev_version: "{{ (lookup('ansible.builtin.url', 'https://api.github.com/repos/MRtrix3/mrtrix3/commits/HEAD', wantlist=True)[0] | from_json).commit.committer.date | regex_replace('T.*', '') | regex_replace('-','') }}"
+
+# minc-toolkit-extras
+minc_toolkit_extras_version : "{{ (lookup('ansible.builtin.url', 'https://api.github.com/repos/CoBrALab/minc-toolkit-extras/commits/HEAD', wantlist=True)[0] | from_json).commit.committer.date | regex_replace('T.*', '') | regex_replace('-','') }}"
