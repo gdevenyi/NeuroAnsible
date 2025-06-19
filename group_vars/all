@@ -15,4 +15,4 @@ fsl_version: 6.0.7.13
 freesurfer_version: 7.4.1
 
 # https://github.com/MRtrix3/mrtrix3.git . This module will try to compile latest commit in main
-mrtrix3_dev_version: "dev"
+mrtrix3_dev_version: "{{ (lookup('ansible.builtin.url', 'https://api.github.com/repos/MRtrix3/mrtrix3/commits/HEAD', wantlist=True)[0] | from_json).commit.committer.date | regex_replace('T.*', '') | regex_replace('-','') }}"
