@@ -48,7 +48,9 @@
     dest: /opt/quarantine/software/itk-snap/4.2.0/install
     creates:  /opt/quarantine/software/itk-snap/4.2.0/install/bin/itksnap
     remote_src: yes
-    extra_opts: [--strip-components=1]
+    extra_opts:
+      - --strip-components=1
+      - --no-same-owner  # Prevent chown issues in Docker
 
 - name: Install module
   template:
@@ -64,7 +66,9 @@
     dest: /opt/quarantine/software/3DSlicer/5.6.2/install
     creates: /opt/quarantine/software/3DSlicer/5.6.2/install/Slicer
     remote_src: yes
-    extra_opts: [--strip-components=1]
+    extra_opts:
+      - --strip-components=1
+      - --no-same-owner  # Prevent chown issues in Docker
 
 - name: Install module
   template:
@@ -117,6 +121,8 @@
     creates:  /opt/quarantine/software/dcm2niix/v1.0.20240202/install/dcm2niix
     remote_src: yes
 
+    extra_opts:
+      - --no-same-owner  # Prevent chown issues in Docker
 - name: Install module
   template:
     src: templates/basemodule.j2
@@ -131,7 +137,9 @@
     dest: /opt/quarantine/software/mi-brain/2020.04.09_r2e0ff5/install
     creates: /opt/quarantine/software/mi-brain/2020.04.09_r2e0ff5/install/MI-Brain.sh
     remote_src: yes
-    extra_opts: [--strip-components=1]
+    extra_opts:
+      - --strip-components=1
+      - --no-same-owner  # Prevent chown issues in Docker
 
 - name: Install module
   template:
@@ -223,7 +231,9 @@
     dest: /opt/quarantine/software/c3d/1.4.0/install
     creates: /opt/quarantine/software/c3d/1.4.0/install/bin
     remote_src: yes
-    extra_opts: [--strip-components=1]
+    extra_opts:
+      - --strip-components=1
+      - --no-same-owner  # Prevent chown issues in Docker
 
 - name: Install module
   template:
@@ -240,6 +250,8 @@
     creates: /opt/quarantine/software/dcm2bids/3.1.1/install/bin
     remote_src: yes
 
+    extra_opts:
+      - --no-same-owner  # Prevent chown issues in Docker
 - name: Install module
   template:
     src: templates/basemodule.j2
@@ -254,7 +266,9 @@
     dest: /opt/quarantine/software/bpipe/0.9.12/install
     creates: /opt/quarantine/software/bpipe/0.9.12/install/bin/bpipe
     remote_src: yes
-    extra_opts: [--strip-components=1]
+    extra_opts:
+      - --strip-components=1
+      - --no-same-owner  # Prevent chown issues in Docker
 
 - name: Install module
   template:

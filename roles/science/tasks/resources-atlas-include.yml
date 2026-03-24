@@ -10,3 +10,6 @@
     dest: /opt/quarantine/resources/{{ (item | basename | splitext)[0] }}
     creates: /opt/quarantine/resources/{{ (item | basename | splitext)[0] }}/COPYING
     remote_src: yes
+
+    extra_opts:
+      - --no-same-owner  # Prevent chown issues in Docker

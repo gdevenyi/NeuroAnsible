@@ -1,0 +1,25 @@
+# Ansible
+ansible.log
+*.retry
+
+# Development
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Documentation
+*.md
+LICENSE
+
+# macOS
+.DS_Store
+
+# Test artifacts
+tests/output/
