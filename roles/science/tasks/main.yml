@@ -9,7 +9,7 @@
     state: directory
     mode: u=rwX,g=rwX,o=rwX
 
-- {import_tasks: modules.yml, tags: modules}
+- {import_tasks: modules.yml, tags: [always,modules]}
 - {import_tasks: afni.yml, tags: afni}
 - {import_tasks: freesurfer.yml, tags: freesurfer}
 - {import_tasks: ants.yml, tags: ants}
