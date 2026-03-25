@@ -21,8 +21,6 @@
     dest: "/opt/quarantine/software/ANTs/{{ ants_version }}/install"
     creates: "/opt/quarantine/software/ANTs/{{ ants_version }}/install/bin/antsRegistration"
     remote_src: yes
-    extra_opts:
-      - --no-same-owner  # Prevent chown issues in Docker
 
 - name: Move ANTs install files
   shell: "mv /opt/quarantine/software/ANTs/{{ ants_version }}/install/ants-{{ ants_version }}/* /opt/quarantine/software/ANTs/{{ ants_version }}/install"
