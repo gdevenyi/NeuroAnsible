@@ -15,7 +15,7 @@
     - /opt/quarantine/software/connectome-workbench/v2.1.0/install
     - /opt/quarantine/software/dsi-studio/2025.04.16/install
     - /opt/quarantine/software/c3d/1.4.0/install
-    - /opt/quarantine/software/dcm2bids/3.1.1/install
+    - /opt/quarantine/software/dcm2bids/3.2.0/install
     - /opt/quarantine/software/bpipe/0.9.12/install
 
 ###############################################################################
@@ -222,9 +222,9 @@
 
 - name: Install dcm2bids
   unarchive:
-    src: https://github.com/UNFmontreal/Dcm2Bids/releases/download/3.1.1/dcm2bids_debian-based_3.1.1.tar.gz
-    dest: /opt/quarantine/software/dcm2bids/3.1.1/install
-    creates: /opt/quarantine/software/dcm2bids/3.1.1/install/bin
+    src: https://github.com/UNFmontreal/Dcm2Bids/releases/download/3.2.0/dcm2bids_debian-based_3.2.0.tar.gz
+    dest: /opt/quarantine/software/dcm2bids/3.2.0/install
+    creates: /opt/quarantine/software/dcm2bids/3.2.0/install/bin
     remote_src: yes
 
     extra_opts:
@@ -232,7 +232,7 @@
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/dcm2bids/3.1.1/module
+    dest: /opt/quarantine/software/dcm2bids/3.2.0/module
   notify: link modules
 
 ###############################################################################
