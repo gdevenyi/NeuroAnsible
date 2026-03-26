@@ -23,3 +23,12 @@ LICENSE
 
 # Test artifacts
 tests/output/
+
+
+# Local files and directories
+local/
+.env
+*.env
+
+# Local plans
+PLAN.md
