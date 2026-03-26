@@ -6,7 +6,7 @@
     state: directory
   loop:
     - /opt/quarantine/software/itk-snap/4.4.0/install
-    - /opt/quarantine/software/3DSlicer/5.6.2/install
+    - /opt/quarantine/software/3DSlicer/5.10.0/install
     - /opt/quarantine/software/MRIcron/v1.2.20211006/install
     - /opt/quarantine/software/MRIcroGL/v1.2.20220720/install
     - /opt/quarantine/software/dcm2niix/v1.0.20240202/install
@@ -62,9 +62,9 @@
 
 - name: Install 3DSlicer
   unarchive:
-    src: https://download.slicer.org/bitstream/660f92ed30e435b0e355f1a4
-    dest: /opt/quarantine/software/3DSlicer/5.6.2/install
-    creates: /opt/quarantine/software/3DSlicer/5.6.2/install/Slicer
+    src: https://download.slicer.org/bitstream/6911b598ac7b1c95e7934427
+    dest: /opt/quarantine/software/3DSlicer/5.10.0/install
+    creates: /opt/quarantine/software/3DSlicer/5.10.0/install/Slicer
     remote_src: yes
     extra_opts:
       - --strip-components=1
@@ -73,7 +73,7 @@
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/3DSlicer/5.6.2/module
+    dest: /opt/quarantine/software/3DSlicer/5.10.0/module
   notify: link modules
 
 ###############################################################################
