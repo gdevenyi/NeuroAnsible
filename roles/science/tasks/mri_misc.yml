@@ -5,7 +5,7 @@
     path: "{{ item }}"
     state: directory
   loop:
-    - /opt/quarantine/software/itk-snap/4.2.0/install
+    - /opt/quarantine/software/itk-snap/4.4.0/install
     - /opt/quarantine/software/3DSlicer/5.6.2/install
     - /opt/quarantine/software/MRIcron/v1.2.20211006/install
     - /opt/quarantine/software/MRIcroGL/v1.2.20220720/install
@@ -44,9 +44,9 @@
 
 - name: Install itk-snap
   unarchive:
-    src: https://downloads.sourceforge.net/project/itk-snap/itk-snap/4.2.0/itksnap-4.2.0-20240422-Linux-gcc64.tar.gz
-    dest: /opt/quarantine/software/itk-snap/4.2.0/install
-    creates:  /opt/quarantine/software/itk-snap/4.2.0/install/bin/itksnap
+    src: https://downloads.sourceforge.net/project/itk-snap/itk-snap/4.4.0/itksnap-4.4.0-20250909-Linux-x86_64.tar.gz
+    dest: /opt/quarantine/software/itk-snap/4.4.0/install
+    creates:  /opt/quarantine/software/itk-snap/4.4.0/install/bin/itksnap
     remote_src: yes
     extra_opts:
       - --strip-components=1
@@ -55,7 +55,7 @@
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/itk-snap/4.2.0/module
+    dest: /opt/quarantine/software/itk-snap/4.4.0/module
   notify: link modules
 
 ###############################################################################
