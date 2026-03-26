@@ -26,4 +26,4 @@
     PIPX_HOME: /opt/pipx
     PIPX_BIN_DIR: /usr/local/bin
   with_items:
-    - qbatch
+    - qbatch==2.3.1
