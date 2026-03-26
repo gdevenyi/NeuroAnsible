@@ -13,6 +13,8 @@
     dest: /opt/quarantine/software/matlab-runtime/R2023b-23.2/src
     creates: /opt/quarantine/software/matlab-runtime/R2023b-23.2/src/install
     remote_src: yes
+    extra_opts:
+      - --no-same-owner  # Prevent chown issues in Docker
 
 - name: Run installer
   ansible.builtin.command:
