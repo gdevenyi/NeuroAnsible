@@ -14,7 +14,7 @@
     dest: "/opt/quarantine/software/fsl/{{ fsl_version }}/src/fslinstaller.py"
 
 - name: install fsl
-  shell: "python /opt/quarantine/software/fsl/{{ fsl_version }}/src/fslinstaller.py --dest /opt/quarantine/software/fsl/{{ fsl_version }}/install --fslversion {{ fsl_version }} --no_env --overwrite"
+  shell: "python3 /opt/quarantine/software/fsl/{{ fsl_version }}/src/fslinstaller.py --dest /opt/quarantine/software/fsl/{{ fsl_version }}/install --fslversion {{ fsl_version }} --no_env --overwrite"
   args:
     creates: "/opt/quarantine/software/fsl/{{ fsl_version }}/install/LICENCE.FSL"
 
