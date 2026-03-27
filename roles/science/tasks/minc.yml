@@ -7,7 +7,7 @@
     - /opt/quarantine/software/minc-toolkit-v2/1.9.18/install
     - /opt/quarantine/software/minc-toolkit-v2/1.9.18/src
     - /opt/quarantine/software/minc-stuffs/v0.1.25
-    - /opt/quarantine/software/minc2-simple/v2.2.30/build
+    - /opt/quarantine/software/minc2-simple/v2.20.40/build
 
 - name: Install minc-toolkit-v2 build deps
   apt:
@@ -33,6 +33,7 @@
       - libjpeg-dev
       - libssl-dev
       - zlib1g-dev
+      - cmake
       - automake
       - cpanminus
       - patchelf
@@ -121,12 +122,12 @@
 
 - name: clone minc2-simple
   git:
-    repo: https://github.com/vfonov/minc2-simple.git
-    dest: /opt/quarantine/software/minc2-simple/v2.2.30/src
-    version: v2.2.30
+    repo: https://github.com/NIST-MNI/minc2-simple.git
+    dest: /opt/quarantine/software/minc2-simple/v2.20.40/src
+    version: v2.20.40
 
 - name: Install minc2-simple (python)
-  shell: MINC_TOOLKIT=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install micromamba run -r /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base pip install /opt/quarantine/software/minc2-simple/v2.2.30/src/python
+  shell: MINC_TOOLKIT=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install micromamba run -r /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base pip install /opt/quarantine/software/minc2-simple/v2.20.40/src/python
   args:
     creates: /opt/quarantine/software/conda/{{ ansible_date_time.date }}/conda-base/lib/python3.11/site-packages/minc2_simple
   when:
@@ -135,7 +136,7 @@
 - name: Install minc2-simple (C)
   shell: cmake -DCMAKE_INSTALL_PREFIX=/opt/quarantine/software/minc-toolkit-v2/1.9.18/install ../src && make -j {{ ansible_processor_vcpus }} && make install
   args:
-    chdir: /opt/quarantine/software/minc2-simple/v2.2.30/build
+    chdir: /opt/quarantine/software/minc2-simple/v2.20.40/build
     creates: /opt/quarantine/software/minc-toolkit-v2/1.9.18/install/lib/libminc2-simple.so
     executable: /bin/bash
 

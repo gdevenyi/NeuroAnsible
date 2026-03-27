@@ -1,6 +1,6 @@
 ---
 # https://github.com/ANTsX/ANTs/releases
-ants_version: 2.6.2
+ants_version: 2.6.5
 
 # Automatic lookup online
 afni_version: "{{ lookup('ansible.builtin.url', 'https://afni.nimh.nih.gov/pub/dist/AFNI.version', wantlist=True)[0] | regex_replace('AFNI_', '')  }}"
@@ -9,13 +9,14 @@ afni_version: "{{ lookup('ansible.builtin.url', 'https://afni.nimh.nih.gov/pub/d
 fastsurfer_version: 2.4.2
 
 # https://fsl.fmrib.ox.ac.uk/fsl/docs/#/development/history/index
-fsl_version: 6.0.7.13
+fsl_version: 6.0.7.21
 
 # https://surfer.nmr.mgh.harvard.edu/fswiki/rel7downloads
 freesurfer_version: 7.4.1
+freesurfer_version_v8: 8.1.0
 
 # https://github.com/MRtrix3/mrtrix3/releases
-mrtrix3_version: 3.0.5
+mrtrix3_version: 3.0.8
 
 # https://github.com/MRtrix3/mrtrix3.git . Compile latest commit in main
 mrtrix3_dev_version: "{{ (lookup('ansible.builtin.url', 'https://api.github.com/repos/MRtrix3/mrtrix3/commits/HEAD', wantlist=True)[0] | from_json).commit.committer.date | regex_replace('T.*', '') | regex_replace('-','') }}"

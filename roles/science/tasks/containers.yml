@@ -1,5 +1,11 @@
 ---
 
+- name: Install software-properties-common for apt-add-repository
+  ansible.builtin.apt:
+    name: software-properties-common
+    state: present
+    update_cache: true
+
 - name: add apptainer ppa
   command: apt-add-repository -y -n {{ item }}
   with_items:

@@ -24,6 +24,7 @@
   vars:
     extra_opts:
       - conflict("minc-toolkit-v2")
+      - conflict("freesurfer/8.1.0")
       - prepend_path("PATH", pathJoin(basepath,"fsfast/bin"))
       - prepend_path("PATH", pathJoin(basepath,"tktools"))
       - prepend_path("PATH", pathJoin(basepath,"mni/bin"))
@@ -50,3 +51,65 @@
     src: files/license.txt
     dest: "/opt/quarantine/software/freesurfer/{{ freesurfer_version }}1/install/license.txt"
   ignore_errors: true
+
+
+###############################################################################
+# FreeSurfer 8.1.0 (separate installation from 7.4.1)
+###############################################################################
+
+- name: Create freesurfer 8.1.0 directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "/opt/quarantine/software/freesurfer/{{ freesurfer_version_v8 }}/src"
+    - "/opt/quarantine/software/freesurfer/{{ freesurfer_version_v8 }}/install"
+
+- name: Download freesurfer 8.1.0 deb
+  ansible.builtin.get_url:
+    url: "https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/8.1.0/freesurfer_ubuntu22-8.1.0_amd64.deb"
+    dest: /opt/quarantine/software/freesurfer/{{ freesurfer_version_v8 }}/src
+
+- name: Extract freesurfer 8.1.0 deb to install directory
+  shell: >
+      dpkg -x freesurfer_ubuntu22-8.1.0_amd64.deb /tmp/fs8temp
+      && mv /tmp/fs8temp/usr/local/freesurfer/* /opt/quarantine/software/freesurfer/{{ freesurfer_version_v8 }}/install
+      && rm -rf /tmp/fs8temp
+  args:
+    chdir: /opt/quarantine/software/freesurfer/{{ freesurfer_version_v8 }}/src
+    creates: /opt/quarantine/software/freesurfer/{{ freesurfer_version_v8 }}/install/SetUpFreeSurfer.sh
+    executable: /bin/bash
+
+- name: Install module
+  template:
+    src: templates/basemodule.j2
+    dest: "/opt/quarantine/software/freesurfer/{{ freesurfer_version_v8 }}/module"
+  vars:
+    extra_opts:
+      - conflict("minc-toolkit-v2")
+      - conflict("freesurfer/7.4.1")
+      - prepend_path("PATH", pathJoin(basepath,"fsfast/bin"))
+      - prepend_path("PATH", pathJoin(basepath,"tktools"))
+      - prepend_path("PATH", pathJoin(basepath,"mni/bin"))
+      - setenv("MINC_BIN_DIR", pathJoin(basepath,"mni/bin"))
+      - setenv("FSFAST_HOME", pathJoin(basepath,"fsfast"))
+      - setenv("FREESURFER", basepath)
+      - setenv("FREESURFER_HOME", basepath)
+      - setenv("MNI_DATAPATH", pathJoin(basepath,"mni/data"))
+      - setenv("FS_OVERRIDE", "0")
+      - setenv("FUNCTIONALS_DIR", pathJoin(basepath,"sessions"))
+      - setenv("MINC_LIB_DIR", pathJoin(basepath,"mni/lib"))
+      - setenv("FMRI_ANALYSIS_DIR", pathJoin(basepath,"fsfast"))
+      - setenv("MNI_DIR", pathJoin(basepath,"mni"))
+      - prepend_path("PERL5LIB", pathJoin(basepath,"mni/share/perl5"))
+      - setenv("MNI_PERL5LIB", pathJoin(basepath,"mni/share/perl5"))
+      - setenv("LOCAL_DIR", pathJoin(basepath,"local"))
+      - setenv("FIX_VERTEX_AREA", "")
+      - setenv("SUBJECTS_DIR", pathJoin(basepath,"subjects"))
+      - setenv("FSF_OUTPUT_FORMAT", "nii.gz")
+  notify: link modules
+
+- name: Cleanup freesurfer 8.1.0 downloaded deb
+  ansible.builtin.file:
+    path: "/opt/quarantine/software/freesurfer/{{ freesurfer_version_v8 }}/src"
+    state: absent
