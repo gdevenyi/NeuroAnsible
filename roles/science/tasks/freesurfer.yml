@@ -48,5 +48,5 @@
 - name: install freesurfer license
   ansible.builtin.copy:
     src: files/license.txt
-    dest: "/opt/quarantine/software/freesurfer/{{ freesurfer_version }}1/install/license.txt"
+    dest: "/opt/quarantine/software/freesurfer/{{ freesurfer_version }}/install/license.txt"
   ignore_errors: true
