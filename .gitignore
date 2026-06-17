@@ -1,2 +1,7 @@
 ansible.log
 .vscode
+
+# libvirt VM test harness
+testing/libvirt/cache/
+testing/libvirt/.venv/
+testing/libvirt/inventory-*
