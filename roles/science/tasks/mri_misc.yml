@@ -14,7 +14,7 @@
     - /opt/quarantine/software/mango/4.1/install
     - /opt/quarantine/software/connectome-workbench/v1.5.0/install
     - /opt/quarantine/software/connectome-workbench/v2.0.0/install
-    - /opt/quarantine/software/dsi-studio/2023.12.06/install
+    - /opt/quarantine/software/dsi-studio/2025.04.16/install
     - /opt/quarantine/software/c3d/1.4.0/install
     - /opt/quarantine/software/dcm2bids/3.1.1/install
     - /opt/quarantine/software/bpipe/0.9.12/install
@@ -210,17 +210,17 @@
 - name: Install dsi-studio
   ansible.builtin.shell: |
       curl -s -L -o /tmp/dsi_studio_ubuntu2204.zip \
-      https://github.com/frankyeh/DSI-Studio/releases/download/2023.12.06/dsi_studio_ubuntu2204.zip
-      bsdtar xzvf /tmp/dsi_studio_ubuntu2204.zip --strip-components 1 -C /opt/quarantine/software/dsi-studio/2023.12.06/install
+      https://github.com/frankyeh/DSI-Studio/releases/download/2025.04.16/dsi_studio_ubuntu2204.zip
+      bsdtar xzvf /tmp/dsi_studio_ubuntu2204.zip --strip-components 1 -C /opt/quarantine/software/dsi-studio/2025.04.16/install
       rm -f /tmp/dsi_studio_ubuntu2204.zip
   args:
-    creates: /opt/quarantine/software/dsi-studio/2023.12.06/install/dsi_studio
+    creates: /opt/quarantine/software/dsi-studio/2025.04.16/install/dsi_studio
     executable: /bin/bash
 
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/dsi-studio/2023.12.06/module
+    dest: /opt/quarantine/software/dsi-studio/2025.04.16/module
   notify: link modules
 
 ###############################################################################
