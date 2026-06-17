@@ -9,7 +9,7 @@
     - /opt/quarantine/software/3DSlicer/5.6.2/install
     - /opt/quarantine/software/MRIcron/v1.2.20211006/install
     - /opt/quarantine/software/MRIcroGL/v1.2.20220720/install
-    - /opt/quarantine/software/dcm2niix/v1.0.20240202/install
+    - /opt/quarantine/software/dcm2niix/v1.0.20260416/install
     - /opt/quarantine/software/mi-brain/2020.04.09_r2e0ff5/install
     - /opt/quarantine/software/mango/4.1/install
     - /opt/quarantine/software/connectome-workbench/v1.5.0/install
@@ -116,17 +116,16 @@
 
 - name: Install dcm2niix
   unarchive:
-    src: https://github.com/rordenlab/dcm2niix/releases/download/v1.0.20240202/dcm2niix_lnx.zip
-    dest: /opt/quarantine/software/dcm2niix/v1.0.20240202/install
-    creates:  /opt/quarantine/software/dcm2niix/v1.0.20240202/install/dcm2niix
+    src: https://github.com/rordenlab/dcm2niix/releases/download/v1.0.20260416/dcm2niix_lnx.zip
+    dest: /opt/quarantine/software/dcm2niix/v1.0.20260416/install
+    creates:  /opt/quarantine/software/dcm2niix/v1.0.20260416/install/dcm2niix
     remote_src: yes
-
-    extra_opts:
-      - --no-same-owner  # Prevent chown issues in Docker
+    # No extra_opts: this asset is a .zip, and --no-same-owner is a tar-only
+    # flag that unzip rejects ("failed to unpack").
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/dcm2niix/v1.0.20240202/module
+    dest: /opt/quarantine/software/dcm2niix/v1.0.20260416/module
   notify: link modules
 
 ###############################################################################
