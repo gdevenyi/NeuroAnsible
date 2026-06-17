@@ -1,29 +1,15 @@
 ---
 
-# Install pipx
-- name: Install pipx
-  ansible.builtin.apt:
-    update_cache: yes
-    state: present
-    autoclean: yes
-    autoremove: yes
-    pkg: pipx
-
-# pipx directory
-- name: ensure /opt/pipx
-  ansible.builtin.file:
-    path: /opt/pipx
-    state: directory
-    mode: 0755
+# Install Python CLI tools with a global uv + `uv tool install` (not pipx).
+- name: Install uv globally
+  ansible.builtin.shell: curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin INSTALLER_NO_MODIFY_PATH=1 sh
+  args:
+    creates: /usr/local/bin/uv
 
 - name: install qbatch
-  community.general.pipx:
-    name: "{{ item }}"
-    state: present
-    inject_packages: "setuptools"
-    include_injected: true
+  ansible.builtin.command: uv tool install --with setuptools qbatch==2.3.1
+  args:
+    creates: /usr/local/bin/qbatch
   environment:
-    PIPX_HOME: /opt/pipx
-    PIPX_BIN_DIR: /usr/local/bin
-  with_items:
-    - qbatch
+    UV_TOOL_DIR: /opt/uv-tools
+    UV_TOOL_BIN_DIR: /usr/local/bin
