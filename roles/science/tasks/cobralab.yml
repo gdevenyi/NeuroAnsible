@@ -8,7 +8,7 @@
     - /opt/quarantine/software/iterativeN3/20230821
     - /opt/quarantine/software/iterativeN4_multispectral/20210503
     - /opt/quarantine/software/minc-bpipe-library/20230721
-    - /opt/quarantine/software/bpipe/0.9.12/install
+    - /opt/quarantine/software/bpipe/0.9.13/install
 
 - name: clone minc-toolkit-extras
   ansible.builtin.git:
@@ -77,9 +77,9 @@
 
 - name: install bpipe
   unarchive:
-    src: https://github.com/ssadedin/bpipe/releases/download/0.9.12/bpipe-0.9.12.tar.gz
-    dest: /opt/quarantine/software/bpipe/0.9.12/install
-    creates: /opt/quarantine/software/bpipe/0.9.12/install/bin/bpipe
+    src: https://github.com/ssadedin/bpipe/releases/download/0.9.13/bpipe-0.9.13.tar.gz
+    dest: /opt/quarantine/software/bpipe/0.9.13/install
+    creates: /opt/quarantine/software/bpipe/0.9.13/install/bin/bpipe
     remote_src: yes
     extra_opts:
       - --strip-components=1
@@ -88,5 +88,5 @@
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/bpipe/0.9.12/module
+    dest: /opt/quarantine/software/bpipe/0.9.13/module
   notify: link modules
