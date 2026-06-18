@@ -6,7 +6,7 @@
   loop:
     - /opt/quarantine/software/PLS/6.15/install
     - /opt/quarantine/software/SPM12/r7771/install
-    - /opt/quarantine/software/CAT12/12.8.2/install
+    - /opt/quarantine/software/CAT12/12.9/install
     - /opt/quarantine/software/BrainNetViewer/1.7/install
 
 - name: Download MATLAB PLS
@@ -53,9 +53,9 @@
 
 - name: Download SPM
   unarchive:
-    src: https://github.com/ChristianGaser/cat12/releases/download/12.8.2/cat12.8.2.zip
-    dest: /opt/quarantine/software/CAT12/12.8.2/install
-    creates: /opt/quarantine/software/CAT12/12.8.2/install/cat12
+    src: https://github.com/ChristianGaser/cat12/releases/download/12.9/cat12.9.zip
+    dest: /opt/quarantine/software/CAT12/12.9/install
+    creates: /opt/quarantine/software/CAT12/12.9/install/cat12
     remote_src: yes
     extra_opts:
       - --no-same-owner  # Prevent chown issues in Docker
@@ -63,7 +63,7 @@
 - name: Install module
   template:
     src: templates/basemodule.j2
-    dest: /opt/quarantine/software/CAT12/12.8.2/module
+    dest: /opt/quarantine/software/CAT12/12.9/module
   vars:
     prereqs:
       - MATLAB
@@ -78,7 +78,7 @@
     content: |
               global defaults
               defaults.tbx.dir{end+1} = fullfile(fileparts(mfilename('fullpath')),"CAT12") ;
-    dest: /opt/quarantine/software/CAT12/12.8.2/install/spm_my_defaults.m
+    dest: /opt/quarantine/software/CAT12/12.9/install/spm_my_defaults.m
 
 - name: Download BrainNetViewer
   unarchive:
