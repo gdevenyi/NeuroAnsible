@@ -1,4 +1,10 @@
 ---
+# FSL is installed directly from its published conda environment spec via
+# micromamba (https://fsl.fmrib.ox.ac.uk/fsl/docs/install/conda.html), rather
+# than fslinstaller.py. fslinstaller wraps its micromamba call in a
+# progress-monitor that fails under Ansible's non-tty pipes ("env update
+# returned an error" during the solve); a direct micromamba call is robust.
+
 - name: Create FSL directories
   file:
     path: "{{ item }}"
@@ -7,16 +13,25 @@
     - "/opt/quarantine/software/fsl/{{ fsl_version }}/install"
     - "/opt/quarantine/software/fsl/{{ fsl_version }}/src"
 
-- name: download fsl
-  get_url:
-    url: https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py
+- name: Download FSL conda environment spec
+  ansible.builtin.get_url:
+    url: "https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fsl-{{ fsl_version }}_linux-64.yml"
+    dest: "/opt/quarantine/software/fsl/{{ fsl_version }}/src/fsl-env.yml"
+    timeout: 120
 
-    dest: "/opt/quarantine/software/fsl/{{ fsl_version }}/src/fslinstaller.py"
-
-- name: install fsl
-  shell: "python /opt/quarantine/software/fsl/{{ fsl_version }}/src/fslinstaller.py --dest /opt/quarantine/software/fsl/{{ fsl_version }}/install --fslversion {{ fsl_version }} --no_env --overwrite"
+# Uses the system-wide micromamba installed by the mambaorg.micromamba role
+# (/usr/local/bin/micromamba, kept at the latest version). No MAMBA_ROOT_PREFIX
+# override: it must differ from the target -p prefix or micromamba aborts with
+# "Overwriting root prefix is not permitted".
+- name: Install FSL into a self-contained micromamba environment
+  ansible.builtin.command: >
+    micromamba create -y
+    -p /opt/quarantine/software/fsl/{{ fsl_version }}/install
+    -f /opt/quarantine/software/fsl/{{ fsl_version }}/src/fsl-env.yml
+  environment:
+    CONDA_OVERRIDE_CUDA: ""
   args:
-    creates: "/opt/quarantine/software/fsl/{{ fsl_version }}/install/LICENCE.FSL"
+    creates: "/opt/quarantine/software/fsl/{{ fsl_version }}/install/conda-meta/history"
 
 - name: Install module
   template:
@@ -33,4 +48,3 @@
       - setenv("FSLOUTPUTTYPE", "NIFTI_GZ")
       - prepend_path("PATH", pathJoin(basepath, "share/fsl/bin"))
   notify: link modules
-
